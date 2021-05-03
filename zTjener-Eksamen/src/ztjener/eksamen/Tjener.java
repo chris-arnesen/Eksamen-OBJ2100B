@@ -18,11 +18,19 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import java.sql.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 
 public class Tjener extends Application {
     
-    private static String url = "jdbc:sqlite:eksamen.db"; 
+    protected final int WIDTH = 600, HEIGHT = 500; 
+    
+    
     //Socket
     int port = 8000;
     ObjectOutputStream out;
@@ -31,8 +39,14 @@ public class Tjener extends Application {
     Socket socket;
     
     
+    // Listview
+    protected String chat1 = "Chat 1"; 
+    protected String chat2 = "Chat 2"; 
+    protected String chat3 = "Chat 3";
+    
+    
     private Connection connectDB() {
-        //String url = "jdbc:sqlite:C:\\Users\\Mats Engesund\\Documents\\NetBeansProjects\\OBJ2100\\eksamen.db";
+        String url = "jdbc:sqlite:eksamen.db"; 
         Connection con = null; 
         try {
             con = DriverManager.getConnection(url); 
@@ -50,14 +64,28 @@ public class Tjener extends Application {
         app.connectDB();
         
         BorderPane bpane = new BorderPane();
-        //root.getChildren().add(btn);
+        bpane.setLeft(getRooms());
         
-        Scene scene = new Scene(bpane, 600, 500);
-        
+        Scene scene = new Scene(bpane, WIDTH, HEIGHT);
         primaryStage.setTitle("Tjener");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+    
+    
+    public Pane getRooms() {
+        Pane rooms = new Pane();
+        rooms.setPadding(new Insets(5, 5, 5, 50));
+        
+        ObservableList<String> chatNames = FXCollections.observableArrayList(chat1, chat2, chat3);
+        ListView<String> roomList = new ListView<String>(chatNames);
+        roomList.setPrefWidth(WIDTH/3);
+        roomList.setPrefHeight(HEIGHT);
+        rooms.getChildren().add(roomList);
+        
+        return rooms; 
+    }
+    
 
     /**
      * @param args the command line arguments
