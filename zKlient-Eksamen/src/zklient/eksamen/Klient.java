@@ -241,8 +241,10 @@ public class Klient extends Application {
         
     }); 
     }
+    */
+
     /*
->>>>>>> 33a5b7a1194e5b8ef812c71fb4ad19f542aee46c
+
 
     /**
      * @param args the command line arguments

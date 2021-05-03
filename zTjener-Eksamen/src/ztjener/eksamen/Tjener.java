@@ -84,6 +84,24 @@ public class Tjener extends Application {
         }
     }
     
+    //Laste opp melding fra bruker til databasen
+    public static void lastOppMelding() {
+    //btn.setOnAction((event) -> {
+       
+          String insert = "insert into melding (id, tekst, klokkeslett, brukernavn, romnr) values (null, 'her er min kanon', '12.30','Jon_Kanon352', 1);";
+          
+           try (Connection conn = DriverManager.getConnection(url);
+                Statement stmt = conn.createStatement()) {
+            stmt.execute(insert);
+             
+        } catch(SQLException e) {
+            System.out.println("Funka dårlig å sette inn ny data");
+        }
+            
+    //});
+    
+    }
+    
     
     @Override
     public void start(Stage primaryStage) {
@@ -117,12 +135,14 @@ public class Tjener extends Application {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        //(new RunningSocket()).start();
-        //createNewTable();
-        
+    public static void main(String[] args) {  
         rs = new RunningSocket(); 
         rs.start();
+
+        createNewTable();
+        lastOppMelding();
+        //createNewTable();
+
         launch(args);
     }
     
