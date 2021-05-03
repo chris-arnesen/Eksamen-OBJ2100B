@@ -39,6 +39,7 @@ public class Klient extends Application {
     static Pane centerRom = new Pane();
     static Label labelRom = new Label("Chat-Rom: ");
     static ListView list = new ListView();
+    static Button btnJoin = new Button("Join");
     
     
     
@@ -77,9 +78,13 @@ public class Klient extends Application {
         centerRom.setPrefHeight(450);
         centerRom.setStyle("-fx-border-color: black; -fx-background-color: white;");
         labelRom.setStyle("-fx-text-fill:BLACK; -fx-font-size: 30;");
+        list.setPrefWidth(600);
         
         labelRom.setLayoutX(25);
         labelRom.setLayoutY(7);
+        
+  
+        
         
         
         Scene scene = new Scene(bpane, 600, 500);
@@ -98,6 +103,11 @@ public class Klient extends Application {
         bpane.setTop(topRom);
         bpane.setCenter(centerRom);
         topRom.getChildren().add(labelRom);
+        centerRom.getChildren().add(list);
+        
+        list.getItems().add("Item 1");
+        list.getItems().add("Item 2");
+        list.getItems().add("Item 3");
     
     });
         
