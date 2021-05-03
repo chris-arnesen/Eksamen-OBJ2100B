@@ -31,31 +31,6 @@ import javafx.scene.layout.VBox;
 
 public class Tjener extends Application {
     
-    public static class runningSocket extends Thread {
-        static int port = 8000;
-        static ObjectOutputStream out;
-        static ObjectInputStream in;
-        static ServerSocket server;
-        static Socket socket;
-        
-        @Override() 
-        public void run() {
-            try {
-                server = new ServerSocket(port);
-                
-                while(true) {
-                    socket = server.accept();
-                    in = new ObjectInputStream(socket.getInputStream());
-                    String bNavn = (String)(in.readObject()); // Her får du brukernavnet som blir sendt fra klient
-                    System.out.println("DET FUNKER FOR FAEN " + bNavn);
-                    in.close();
-                    socket.close();
-                }
-            } catch(IOException | ClassNotFoundException ex) {
-            }
-        }
-    }
-    
     protected final int WIDTH = 600, HEIGHT = 500; 
     
     
@@ -87,7 +62,7 @@ public class Tjener extends Application {
     
     
     @Override
-    public void start(Stage primaryStage) throws IOException, ClassNotFoundException {
+    public void start(Stage primaryStage) {
         Tjener app = new Tjener(); 
         app.connectDB();
         
@@ -98,10 +73,6 @@ public class Tjener extends Application {
         primaryStage.setTitle("Tjener");
         primaryStage.setScene(scene);
         primaryStage.show();
-        
-        
-        
-        
     }
         
     
@@ -122,26 +93,9 @@ public class Tjener extends Application {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-        (new runningSocket()).start();
+    public static void main(String[] args) {
+        (new RunningSocket()).start();
         launch(args);
-        
-        
-        /*server = new ServerSocket(port);
-        
-        while (true) {
-            socket = server.accept();
-            in = new ObjectInputStream(socket.getInputStream());
-            String bNavn = (String)(in.readObject()); // Her får du brukernavnet som blir sendt fra klient
-            
-            in.close();
-            socket.close();
-        }*/
-        
-        
-        
-        
-        
     }
     
 }
