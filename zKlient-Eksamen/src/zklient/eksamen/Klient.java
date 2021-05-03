@@ -58,6 +58,14 @@ public class Klient extends Application {
     static Button btnJoin = new Button("Join");
     static Button btnNew = new Button("Opprett nytt Chat-rom");
     
+    //Chat deklarasjoner
+    static Pane topChat = new Pane();
+    static Pane centerChat = new Pane();
+    static Pane bottomChat = new Pane();
+    static Label labelChat = new Label("Her kommer rom navnet ;)");
+    static TextField txtChat = new TextField();
+    static Button btnChat = new Button("Send");
+    
     
     
     @Override
@@ -107,7 +115,26 @@ public class Klient extends Application {
         list.getItems().add("Item 1");
         list.getItems().add("Item 2");
         list.getItems().add("Item 3");
+        /* Slutt på rom side panes */
         
+        /* Chat side panes */
+        topChat.setPrefHeight(50);
+        topChat.setStyle("-fx-border-color: black; -fx-background-color: grey;");
+        centerChat.setPrefHeight(450);
+        centerChat.setStyle("-fx-border-color: black; -fx-background-color: white;");
+        bottomChat.setPrefHeight(50);
+        bottomChat.setStyle("-fx-border-color: black; -fx-background-color: grey;");
+        labelChat.setStyle("-fx-text-fill:BLACK; -fx-font-size: 30;");
+        txtChat.setPrefWidth(500);
+        
+        labelChat.setLayoutX(25);
+        labelChat.setLayoutY(7);
+        btnChat.setLayoutX(530);
+        btnChat.setLayoutY(7);
+        txtChat.setLayoutX(20);
+        txtChat.setLayoutY(7);
+        
+        /* Slutt på Chat side panes */
         
         Scene scene = new Scene(bpane, 600, 500);
         primaryStage.setTitle("Klient");
@@ -125,7 +152,6 @@ public class Klient extends Application {
         bpane.setCenter(centerRom);
         topRom.getChildren().add(labelRom);
         centerRom.getChildren().add(list);
-        
         
     });
         
@@ -157,12 +183,31 @@ public class Klient extends Application {
             }
         });   
     }
+    /*
+    public static void chat() {
+        btnNew.setOnAction((event) -> {
+        bpane.getChildren().remove(topRom);
+        bpane.getChildren().remove(centerRom);
+        bpane.getChildren().remove(bottomRom);
+        
+        
+        bpane.setTop(topChat);
+        bpane.setCenter(centerChat);
+        bpane.setBottom(bottomChat);
+        topChat.getChildren().add(labelChat);
+        bottomChat.getChildren().add(txtChat);
+        bottomChat.getChildren().add(btnChat);
+        
+    }); 
+    }
+    /*
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         logInn();
+        //chat();
         launch(args);
     }
     
