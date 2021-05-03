@@ -31,6 +31,7 @@ import javafx.scene.layout.VBox;
 
 public class Tjener extends Application {
     
+    // Lengde og bredde på vinduet
     protected final int WIDTH = 600, HEIGHT = 500; 
     
     
@@ -59,7 +60,7 @@ public class Tjener extends Application {
         }
         return con;
     }
-    
+  
     
     @Override
     public void start(Stage primaryStage) {
