@@ -52,9 +52,11 @@ public class Klient extends Application {
     //Rom deklarasjoner
     static Pane topRom = new Pane();
     static Pane centerRom = new Pane();
+    static Pane bottomRom = new Pane();
     static Label labelRom = new Label("Chat-Rom: ");
     static ListView list = new ListView();
     static Button btnJoin = new Button("Join");
+    static Button btnNew = new Button("Opprett nytt Chat-rom");
     
     
     
@@ -92,11 +94,15 @@ public class Klient extends Application {
         topRom.setStyle("-fx-border-color: black; -fx-background-color: grey;");
         centerRom.setPrefHeight(450);
         centerRom.setStyle("-fx-border-color: black; -fx-background-color: white;");
+        bottomRom.setPrefHeight(50);
+        bottomRom.setStyle("-fx-border-color: black; -fx-background-color: grey;");
         labelRom.setStyle("-fx-text-fill:BLACK; -fx-font-size: 30;");
         list.setPrefWidth(600);
         
         labelRom.setLayoutX(25);
         labelRom.setLayoutY(7);
+        btnNew.setLayoutX(25);
+        btnNew.setLayoutY(7);
         
         list.getItems().add("Item 1");
         list.getItems().add("Item 2");
@@ -120,6 +126,7 @@ public class Klient extends Application {
         topRom.getChildren().add(labelRom);
         centerRom.getChildren().add(list);
         
+        
     });
         
         btnLogin.setOnAction((event) -> {
@@ -142,8 +149,10 @@ public class Klient extends Application {
                     
                     bpane.setTop(topRom);
                     bpane.setCenter(centerRom);
+                    bpane.setBottom(bottomRom);
                     topRom.getChildren().add(labelRom);
                     centerRom.getChildren().add(list);
+                    bottomRom.getChildren().add(btnNew);
                 } catch (IOException ex) { System.out.println("Feil med forbindelse til tjener"); }
             }
         });   
