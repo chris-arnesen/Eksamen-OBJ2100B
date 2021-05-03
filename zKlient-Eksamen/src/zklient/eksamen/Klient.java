@@ -32,6 +32,12 @@ import javafx.stage.Stage;
 
 public class Klient extends Application {
     
+    enum Type {
+        BNAVN, MELDING
+    }
+    
+    static String outputInfo ="";
+    static Type type;
     //Socket
     static int port = 8000;
     static String host = "localhost";
@@ -143,17 +149,6 @@ public class Klient extends Application {
     }
     
     public static void logInn() {
-    btnLogin.setOnAction((event) -> {
-        bpane.getChildren().remove(centerLogin);
-        bpane.getChildren().remove(topLogin);
-        bpane.getChildren().remove(bottomLogin);
-        
-        bpane.setTop(topRom);
-        bpane.setCenter(centerRom);
-        topRom.getChildren().add(labelRom);
-        centerRom.getChildren().add(list);
-        
-    });
         
         btnLogin.setOnAction((event) -> {
             
@@ -164,7 +159,12 @@ public class Klient extends Application {
                 try {
                     socket = new Socket(host, port);
                     out = new ObjectOutputStream(socket.getOutputStream());
-                    out.writeObject(bNavn);
+                    
+                    
+                    String outputInfo = type.BNAVN.name() + ";";
+                    outputInfo+=bNavn;
+                    
+                    out.writeObject(outputInfo);
                     
                     out.close();
                     socket.close();

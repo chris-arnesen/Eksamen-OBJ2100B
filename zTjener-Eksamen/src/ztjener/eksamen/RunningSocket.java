@@ -31,8 +31,20 @@ public class RunningSocket extends Thread {
                 while(true) {
                     socket = server.accept();
                     in = new ObjectInputStream(socket.getInputStream());
-                    String bNavn = (String)(in.readObject()); // Her får du brukernavnet som blir sendt fra klient
-                    System.out.println("DET FUNKER FOR FAEN " + bNavn);
+                    String klientInput = (String)(in.readObject()); // Her får du brukernavnet som blir sendt fra klient
+                    
+                    String[] arrOfStr = klientInput.split(";");
+                    String type = arrOfStr[0];
+                    String info = arrOfStr[1];
+                    if (type.equals("BNAVN")) {
+                        //Her kommer funksjoner for dersom et brukernavn blir sendt
+                        System.out.println("Dette er et brukernavn.. ps DET FUNKER FOR FAEN" + info);
+                    } else if (type.equals("MELDING")) {
+                        //Her kommer funksjoner for dersom en melding blir sendt
+                    }
+                        
+                    
+                    //System.out.println("DET FUNKER FOR FAEN " + klientInput);
                     in.close();
                     socket.close();
                 }
