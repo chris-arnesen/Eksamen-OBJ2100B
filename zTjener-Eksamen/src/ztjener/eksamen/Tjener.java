@@ -32,6 +32,7 @@ import javafx.scene.layout.VBox;
 public class Tjener extends Application {
     
     protected final int WIDTH = 600, HEIGHT = 500; 
+    private static String url = "jdbc:sqlite:eksamen.db"; 
     
     
     //Socket 
@@ -58,6 +59,25 @@ public class Tjener extends Application {
             System.out.println(e.getMessage());
         }
         return con;
+    }
+    
+        //Metode for å oprette nye tabeller
+    public static void createNewTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS melding (\n"
+                + "     id integer PRIMARY KEY autoincrement, \n"
+                + "     tekst string NOT NULL, \n"
+                + "     klokkeslett date NOT NULL, \n"
+                + "     brukernavn string NOT NULL, \n"
+                + "     romnr integer NOT NULL \n"
+                + ");";
+        
+        try (Connection conn = DriverManager.getConnection(url);
+                Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            //stmt.execute(sql1);
+        } catch(SQLException e) {
+            System.out.println("Funka dårlig å opprette ny tabell ja");
+        }
     }
     
     
@@ -95,6 +115,7 @@ public class Tjener extends Application {
      */
     public static void main(String[] args) {
         (new RunningSocket()).start();
+        createNewTable();
         launch(args);
     }
     
