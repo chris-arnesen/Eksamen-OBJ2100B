@@ -33,11 +33,11 @@ public class Tjener extends Application {
     
     
     //Socket
-    int port = 8000;
-    ObjectOutputStream out;
-    ObjectInputStream in;
-    ServerSocket server;
-    Socket socket;
+    static int port = 8000;
+    static ObjectOutputStream out;
+    static ObjectInputStream in;
+    static ServerSocket server;
+    static Socket socket;
     
     
     // Listview
@@ -72,16 +72,7 @@ public class Tjener extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         
-        server = new ServerSocket(port);
         
-        while (true) {
-            socket = server.accept();
-            in = new ObjectInputStream(socket.getInputStream());
-            String bNavn = (String)(in.readObject()); // Her får du brukernavnet som blir sendt fra klient
-            
-            in.close();
-            socket.close();
-        }
     }
     
     
@@ -102,8 +93,19 @@ public class Tjener extends Application {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         launch(args);
+        
+        server = new ServerSocket(port);
+        
+        while (true) {
+            socket = server.accept();
+            in = new ObjectInputStream(socket.getInputStream());
+            String bNavn = (String)(in.readObject()); // Her får du brukernavnet som blir sendt fra klient
+            
+            in.close();
+            socket.close();
+        }
     }
     
 }
