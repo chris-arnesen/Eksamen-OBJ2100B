@@ -5,10 +5,16 @@
  */
 package zklient.eksamen;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -25,6 +31,15 @@ import javafx.stage.Stage;
 
 
 public class Klient extends Application {
+    
+    //Socket
+    static int port = 8000;
+    static String host = "localhost";
+    static ObjectOutputStream out;
+    static ObjectInputStream in;
+    static Socket socket;
+    
+    
     static BorderPane bpane;
     //Login deklarasjoner
     static Pane topLogin = new Pane();
@@ -90,17 +105,30 @@ public class Klient extends Application {
     }
     
     public static void logInn() {
-    btnLogin.setOnAction((event) -> {
-        bpane.getChildren().remove(centerLogin);
-        bpane.getChildren().remove(topLogin);
-        bpane.getChildren().remove(bottomLogin);
-        
-        bpane.setTop(topRom);
-        bpane.setCenter(centerRom);
-        topRom.getChildren().add(labelRom);
-    
-    });
-        
+        btnLogin.setOnAction((event) -> {
+            
+            String bNavn = txtLogin.getText();
+            if (bNavn == "") {
+                System.out.println("Navn-feltet er tomt");
+            } else {
+                try {
+                    socket = new Socket(host, port);
+                    out = new ObjectOutputStream(socket.getOutputStream());
+                    out.writeObject(bNavn);
+                    
+                    out.close();
+                    socket.close();
+                    
+                    bpane.getChildren().remove(centerLogin);
+                    bpane.getChildren().remove(topLogin);
+                    bpane.getChildren().remove(bottomLogin);
+                    
+                    bpane.setTop(topRom);
+                    bpane.setCenter(centerRom);
+                    topRom.getChildren().add(labelRom);
+                } catch (IOException ex) { System.out.println("Feil med forbindelse til tjener"); }
+            }
+        });   
     }
 
     /**

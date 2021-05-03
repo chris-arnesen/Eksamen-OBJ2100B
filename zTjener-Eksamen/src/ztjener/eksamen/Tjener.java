@@ -5,6 +5,7 @@
  */
 package ztjener.eksamen;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -59,7 +60,7 @@ public class Tjener extends Application {
     
     
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException, ClassNotFoundException {
         Tjener app = new Tjener(); 
         app.connectDB();
         
@@ -70,6 +71,17 @@ public class Tjener extends Application {
         primaryStage.setTitle("Tjener");
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+        server = new ServerSocket(port);
+        
+        while (true) {
+            socket = server.accept();
+            in = new ObjectInputStream(socket.getInputStream());
+            String bNavn = (String)(in.readObject()); // Her får du brukernavnet som blir sendt fra klient
+            
+            in.close();
+            socket.close();
+        }
     }
     
     
