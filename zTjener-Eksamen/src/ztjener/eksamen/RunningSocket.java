@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  *
@@ -22,7 +23,13 @@ public class RunningSocket extends Thread {
     static ObjectInputStream in;
     static ServerSocket server;
     static Socket socket;
+    ArrayList<SocketRoom> sr;
         
+    
+    public RunningSocket() {
+        sr = new ArrayList<>();
+    }
+    
     @Override() 
     public void run() {
         try {
@@ -43,7 +50,10 @@ public class RunningSocket extends Thread {
                 else if (type.equals("MELDING")) {
                     //Her kommer funksjoner for dersom en melding blir sendt
                 }
-                        
+                else if (type.equals("ROM")) {
+                    System.out.println("Dette er et rom: " + info + ", " + type);
+                    sr.add(new SocketRoom(info, new RunningSocket()));
+                }
                     
                 //System.out.println("DET FUNKER FOR FAEN " + klientInput);
                 in.close();

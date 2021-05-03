@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -42,6 +43,7 @@ public class Tjener extends Application {
     static ObjectInputStream in;
     static ServerSocket server;
     static Socket socket;
+    static RunningSocket rs;
     
     
     // Listview
@@ -116,8 +118,11 @@ public class Tjener extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        (new RunningSocket()).start();
+        //(new RunningSocket()).start();
         //createNewTable();
+        
+        rs = new RunningSocket(); 
+        rs.start();
         launch(args);
     }
     

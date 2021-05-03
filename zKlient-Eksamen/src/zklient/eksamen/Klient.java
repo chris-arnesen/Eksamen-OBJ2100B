@@ -35,7 +35,7 @@ import javafx.stage.Stage;
 public class Klient extends Application {
     
     enum Type {
-        BNAVN, MELDING
+        BNAVN, MELDING, ROM
     }
     
     static String outputInfo ="";
@@ -151,6 +151,7 @@ public class Klient extends Application {
         primaryStage.show();
     }
     
+    
     public static void logInn() {
         
         btnLogin.setOnAction((event) -> {
@@ -162,7 +163,6 @@ public class Klient extends Application {
                 try {
                     socket = new Socket(host, port);
                     out = new ObjectOutputStream(socket.getOutputStream());
-                    
                     
                     String outputInfo = type.BNAVN.name() + ";";
                     outputInfo+=bNavn;
@@ -198,6 +198,7 @@ public class Klient extends Application {
         if(result.isPresent()) {
             txt = result.get(); 
             createNewRoom(txt);
+            addRoomTooList(txt);
         }
     }
     
@@ -205,12 +206,22 @@ public class Klient extends Application {
     public void createNewRoom(String txt) {
         try {
             socket = new Socket(host, port);
-            out = new ObjectOutputStream(socket.getOutputStream());
-            out.writeObject("Nytt chatroom " + txt);
+            out = new ObjectOutputStream(socket.getOutputStream()); 
+            
+            String outputInfo = type.ROM.name() + ";";
+            outputInfo += txt;        
+            out.writeObject(outputInfo);
+            
             out.close();
+            socket.close();
         } catch (IOException ex) {
             Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    
+    public void addRoomTooList(String txt) {
+        list.getItems().add(txt); 
     }
     
     /*
