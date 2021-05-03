@@ -54,6 +54,7 @@ public class Klient extends Application {
     static Pane centerRom = new Pane();
     static Label labelRom = new Label("Chat-Rom: ");
     static ListView list = new ListView();
+    static Button btnJoin = new Button("Join");
     
     
     
@@ -92,23 +93,39 @@ public class Klient extends Application {
         centerRom.setPrefHeight(450);
         centerRom.setStyle("-fx-border-color: black; -fx-background-color: white;");
         labelRom.setStyle("-fx-text-fill:BLACK; -fx-font-size: 30;");
+        list.setPrefWidth(600);
         
         labelRom.setLayoutX(25);
         labelRom.setLayoutY(7);
         
+        list.getItems().add("Item 1");
+        list.getItems().add("Item 2");
+        list.getItems().add("Item 3");
+        
         
         Scene scene = new Scene(bpane, 600, 500);
-        
         primaryStage.setTitle("Klient");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
     
     public static void logInn() {
+    btnLogin.setOnAction((event) -> {
+        bpane.getChildren().remove(centerLogin);
+        bpane.getChildren().remove(topLogin);
+        bpane.getChildren().remove(bottomLogin);
+        
+        bpane.setTop(topRom);
+        bpane.setCenter(centerRom);
+        topRom.getChildren().add(labelRom);
+        centerRom.getChildren().add(list);
+        
+    });
+        
         btnLogin.setOnAction((event) -> {
             
             String bNavn = txtLogin.getText();
-            if (bNavn == "") {
+            if (bNavn.equals("")) {
                 System.out.println("Navn-feltet er tomt");
             } else {
                 try {
@@ -126,6 +143,7 @@ public class Klient extends Application {
                     bpane.setTop(topRom);
                     bpane.setCenter(centerRom);
                     topRom.getChildren().add(labelRom);
+                    centerRom.getChildren().add(list);
                 } catch (IOException ex) { System.out.println("Feil med forbindelse til tjener"); }
             }
         });   
