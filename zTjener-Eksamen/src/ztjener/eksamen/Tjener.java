@@ -19,6 +19,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -29,10 +31,35 @@ import javafx.scene.layout.VBox;
 
 public class Tjener extends Application {
     
+    public static class runningSocket extends Thread {
+        static int port = 8000;
+        static ObjectOutputStream out;
+        static ObjectInputStream in;
+        static ServerSocket server;
+        static Socket socket;
+        
+        @Override() 
+        public void run() {
+            try {
+                server = new ServerSocket(port);
+                
+                while(true) {
+                    socket = server.accept();
+                    in = new ObjectInputStream(socket.getInputStream());
+                    String bNavn = (String)(in.readObject()); // Her får du brukernavnet som blir sendt fra klient
+                    System.out.println("DET FUNKER FOR FAEN " + bNavn);
+                    in.close();
+                    socket.close();
+                }
+            } catch(IOException | ClassNotFoundException ex) {
+            }
+        }
+    }
+    
     protected final int WIDTH = 600, HEIGHT = 500; 
     
     
-    //Socket
+    //Socket 
     static int port = 8000;
     static ObjectOutputStream out;
     static ObjectInputStream in;
@@ -73,8 +100,10 @@ public class Tjener extends Application {
         primaryStage.show();
         
         
+        
+        
     }
-    
+        
     
     public Pane getRooms() {
         Pane rooms = new Pane();
@@ -94,9 +123,11 @@ public class Tjener extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException, ClassNotFoundException {
+        (new runningSocket()).start();
         launch(args);
         
-        server = new ServerSocket(port);
+        
+        /*server = new ServerSocket(port);
         
         while (true) {
             socket = server.accept();
@@ -105,7 +136,12 @@ public class Tjener extends Application {
             
             in.close();
             socket.close();
-        }
+        }*/
+        
+        
+        
+        
+        
     }
     
 }
