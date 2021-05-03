@@ -18,26 +18,39 @@ import java.net.Socket;
 public class RunningSocket extends Thread {
     
     static int port = 8000;
-        static ObjectOutputStream out;
-        static ObjectInputStream in;
-        static ServerSocket server;
-        static Socket socket;
+    static ObjectOutputStream out;
+    static ObjectInputStream in;
+    static ServerSocket server;
+    static Socket socket;
         
-        @Override() 
-        public void run() {
-            try {
-                server = new ServerSocket(port);
+    @Override() 
+    public void run() {
+        try {
+            server = new ServerSocket(port);
                 
-                while(true) {
-                    socket = server.accept();
-                    in = new ObjectInputStream(socket.getInputStream());
-                    String bNavn = (String)(in.readObject()); // Her får du brukernavnet som blir sendt fra klient
-                    System.out.println("DET FUNKER FOR FAEN " + bNavn);
-                    in.close();
-                    socket.close();
+            while(true) {
+                socket = server.accept();
+                in = new ObjectInputStream(socket.getInputStream());
+                String klientInput = (String)(in.readObject()); // Her får du brukernavnet som blir sendt fra klient
+                    
+                String[] arrOfStr = klientInput.split(";");
+                String type = arrOfStr[0];
+                String info = arrOfStr[1];
+                if (type.equals("BNAVN")) {
+                   //Her kommer funksjoner for dersom et brukernavn blir sendt
+                    System.out.println("Dette er et brukernavn.. ps DET FUNKER FOR FAEN" + info);
+                } 
+                else if (type.equals("MELDING")) {
+                    //Her kommer funksjoner for dersom en melding blir sendt
                 }
-            } catch(IOException | ClassNotFoundException ex) {
+                        
+                    
+                //System.out.println("DET FUNKER FOR FAEN " + klientInput);
+                in.close();
+                socket.close();
             }
+        } catch(IOException | ClassNotFoundException ex) {
         }
+    }
     
 }

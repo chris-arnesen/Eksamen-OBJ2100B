@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -23,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -32,6 +34,12 @@ import javafx.stage.Stage;
 
 public class Klient extends Application {
     
+    enum Type {
+        BNAVN, MELDING
+    }
+    
+    static String outputInfo ="";
+    static Type type;
     //Socket
     static int port = 8000;
     static String host = "localhost";
@@ -111,6 +119,7 @@ public class Klient extends Application {
         labelRom.setLayoutY(7);
         btnNew.setLayoutX(25);
         btnNew.setLayoutY(7);
+        btnNew.setOnAction(e -> openInput());
         
         list.getItems().add("Item 1");
         list.getItems().add("Item 2");
@@ -143,17 +152,6 @@ public class Klient extends Application {
     }
     
     public static void logInn() {
-    btnLogin.setOnAction((event) -> {
-        bpane.getChildren().remove(centerLogin);
-        bpane.getChildren().remove(topLogin);
-        bpane.getChildren().remove(bottomLogin);
-        
-        bpane.setTop(topRom);
-        bpane.setCenter(centerRom);
-        topRom.getChildren().add(labelRom);
-        centerRom.getChildren().add(list);
-        
-    });
         
         btnLogin.setOnAction((event) -> {
             
@@ -164,7 +162,12 @@ public class Klient extends Application {
                 try {
                     socket = new Socket(host, port);
                     out = new ObjectOutputStream(socket.getOutputStream());
-                    out.writeObject(bNavn);
+                    
+                    
+                    String outputInfo = type.BNAVN.name() + ";";
+                    outputInfo+=bNavn;
+                    
+                    out.writeObject(outputInfo);
                     
                     out.close();
                     socket.close();
@@ -183,6 +186,33 @@ public class Klient extends Application {
             }
         });   
     }
+    
+    
+    public void openInput() {
+        String txt = "";
+        TextInputDialog txtBox = new TextInputDialog("Chatroom name");
+        txtBox.setHeaderText("Create New Chatroom");
+        Optional<String> result = txtBox.showAndWait();
+        
+        /* Måte å hente ut verdien på */
+        if(result.isPresent()) {
+            txt = result.get(); 
+            createNewRoom(txt);
+        }
+    }
+    
+    
+    public void createNewRoom(String txt) {
+        try {
+            socket = new Socket(host, port);
+            out = new ObjectOutputStream(socket.getOutputStream());
+            out.writeObject("Nytt chatroom " + txt);
+            out.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     /*
     public static void chat() {
         btnNew.setOnAction((event) -> {
@@ -201,6 +231,9 @@ public class Klient extends Application {
     }); 
     }
     */
+
+    /*
+
 
     /**
      * @param args the command line arguments
