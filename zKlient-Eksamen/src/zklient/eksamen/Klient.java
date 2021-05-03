@@ -200,7 +200,7 @@ public class Klient extends Application {
         
     }); 
     }
-    /*
+    */
 
     /**
      * @param args the command line arguments
