@@ -89,7 +89,7 @@ public class Tjener extends Application {
         app.connectDB();
         
         BorderPane bpane = new BorderPane();
-        bpane.setLeft(getRooms());
+        bpane.setLeft(getRoomPane());
         
         Scene scene = new Scene(bpane, WIDTH, HEIGHT);
         primaryStage.setTitle("Tjener");
@@ -98,7 +98,7 @@ public class Tjener extends Application {
     }
         
     
-    public Pane getRooms() {
+    public Pane getRoomPane() {
         Pane rooms = new Pane();
         rooms.setPadding(new Insets(5, 5, 5, 50));
         
@@ -117,7 +117,7 @@ public class Tjener extends Application {
      */
     public static void main(String[] args) {
         (new RunningSocket()).start();
-        createNewTable();
+        //createNewTable();
         launch(args);
     }
     

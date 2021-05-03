@@ -14,17 +14,21 @@ import java.util.ArrayList;
  */
 public class SocketRoom {
     
-    protected ArrayList<RunningSocket> rooms = new ArrayList<>();
+    public String romNavn; 
+    public RunningSocket rs; 
     
     
-    public SocketRoom(RunningSocket socket) {
-        rooms.add(socket);
+    public SocketRoom(String romNavn, RunningSocket rs) {
+        this.romNavn = romNavn; 
+        this.rs = rs; 
     }
     
+    public RunningSocket getRS() {
+        return rs; 
+    }
     
-    public void startRooms() {
-        for (RunningSocket room : rooms)
-            room.start();
+    public String getNavn() {
+        return romNavn; 
     }
     
 }
