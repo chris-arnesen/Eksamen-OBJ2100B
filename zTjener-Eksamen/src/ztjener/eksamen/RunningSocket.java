@@ -34,7 +34,7 @@ public class RunningSocket extends Thread {
     public void run() {
         try {
             server = new ServerSocket(port);
-                
+            String bruker = "";    
             while(true) {
                 socket = server.accept();
                 in = new ObjectInputStream(socket.getInputStream());
@@ -45,10 +45,13 @@ public class RunningSocket extends Thread {
                 String info = arrOfStr[1];
                 if (type.equals("BNAVN")) {
                    //Her kommer funksjoner for dersom et brukernavn blir sendt
+                    bruker = info;
                     System.out.println("Dette er et brukernavn.. ps DET FUNKER FOR FAEN" + info);
                 } 
                 else if (type.equals("MELDING")) {
                     //Her kommer funksjoner for dersom en melding blir sendt
+                    Tjener.lastOppMelding(info, bruker);
+                    System.out.println("Melding ble sendt!");
                 }
                 else if (type.equals("ROM")) {
                     System.out.println("Dette er et rom: " + info + ", " + type);

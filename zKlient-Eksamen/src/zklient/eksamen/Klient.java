@@ -152,6 +152,29 @@ public class Klient extends Application {
     }
     
     
+    public static void sendMelding() {
+        
+        btnChat.setOnAction(event -> {
+            System.out.println("Du trykka på send-knappen");
+            String melding = txtChat.getText();
+            if (melding.equals("")) {
+                System.out.println("Du har ikke skrevet noe, i meldingsboksen");
+            } else {
+                try {
+                    socket = new Socket(host, port);
+                    out = new ObjectOutputStream(socket.getOutputStream());
+                    
+                    String outputInfo = type.MELDING.name()+";";
+                    outputInfo+=melding;
+                    out.writeObject(outputInfo);
+                    out.close();
+                    socket.close();
+                } catch (IOException ex) {}
+            }
+            
+        });
+    }
+    
     public static void logInn() {
         
         btnLogin.setOnAction((event) -> {
@@ -250,6 +273,7 @@ public class Klient extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        sendMelding();
         logInn();
         //chat();
         launch(args);
