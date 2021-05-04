@@ -69,7 +69,6 @@ public class Klient extends Application {
     static Pane bottomRom = new Pane();
     static Label labelRom = new Label("Chat-Rom: ");
     static ListView list = new ListView(FXCollections.observableArrayList(Arrays.asList())); // denne deklareres på linje 223 i metoden 'addRoomToList
-    static Button btnJoin = new Button("Join");
     static Button btnNew = new Button("Opprett nytt Chat-rom");
     
     //Chat deklarasjoner
@@ -79,6 +78,7 @@ public class Klient extends Application {
     static Label labelChat = new Label("Her kommer rom navnet ;)");
     static TextField txtChat = new TextField();
     static Button btnChat = new Button("Send");
+    static Button btnBack = new Button("Tilbake");
     
     
     
@@ -149,6 +149,10 @@ public class Klient extends Application {
         txtChat.setLayoutX(20);
         txtChat.setLayoutY(7);
         
+          topChat.getChildren().add(labelChat);
+          bottomChat.getChildren().add(txtChat);
+          bottomChat.getChildren().add(btnChat);
+          centerChat.getChildren().add(btnBack);
         /* Slutt på Chat side panes */
         
         Scene scene = new Scene(bpane, 600, 500);
@@ -231,6 +235,18 @@ public class Klient extends Application {
         }
     }
     
+    public static void backBtn() {
+          btnBack.setOnAction(event -> {                          
+                            bpane.getChildren().remove(topChat);
+                            bpane.getChildren().remove(centerChat);
+                            bpane.getChildren().remove(bottomChat);
+
+                            bpane.setTop(topRom);
+                            bpane.setCenter(centerRom);
+                            bpane.setBottom(bottomRom);
+                        });
+    }
+    
     
     public void createNewRoom(String txt) {
         try {
@@ -241,6 +257,14 @@ public class Klient extends Application {
             outputInfo += txt;        
             out.writeObject(outputInfo);
             
+                        bpane.getChildren().remove(topRom);
+                        bpane.getChildren().remove(centerRom);
+                        bpane.getChildren().remove(bottomRom);
+
+                        bpane.setTop(topChat);
+                        bpane.setCenter(centerChat);
+                        bpane.setBottom(bottomChat);
+                      
             out.close();
             socket.close();
         } catch (IOException ex) {
@@ -266,6 +290,7 @@ public class Klient extends Application {
                         Her kommer det kode på hva som skjer etter
                         de har joinet/blitt lagt til i liste med rom:
                     */
+                       
                     
                     in = new ObjectInputStream(socket.getInputStream());
                     String klientInput = (String)(in.readObject()); 
@@ -311,6 +336,7 @@ public class Klient extends Application {
     public static void main(String[] args) {
         sendMelding();
         logInn();
+        backBtn();
         //chat();
         launch(args);
     }
