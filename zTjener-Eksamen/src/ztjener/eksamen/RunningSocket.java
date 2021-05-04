@@ -8,6 +8,7 @@ package ztjener.eksamen;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -23,11 +24,12 @@ public class RunningSocket extends Thread {
     static ObjectInputStream in;
     static ServerSocket server;
     static Socket socket;
-    ArrayList<SocketRoom> sr;
+    ArrayList<ClientHandler> romListe;
+    String bnavn;
         
     
     public RunningSocket() {
-        sr = new ArrayList<>();
+        romListe = new ArrayList<>();
     }
     
     @Override() 
@@ -38,24 +40,40 @@ public class RunningSocket extends Thread {
             while(true) {
                 socket = server.accept();
                 in = new ObjectInputStream(socket.getInputStream());
-                String klientInput = (String)(in.readObject()); // Her får du brukernavnet som blir sendt fra klient
+                String klientInput = (String)(in.readObject()); // Her får du melding som blir sendt fra klient
                     
                 String[] arrOfStr = klientInput.split(";");
                 String type = arrOfStr[0];
                 String info = arrOfStr[1];
+                
                 if (type.equals("BNAVN")) {
-                   //Her kommer funksjoner for dersom et brukernavn blir sendt
+                   // Her kommer funksjoner for dersom et brukernavn blir sendt
                     System.out.println("Dette er et brukernavn.. ps DET FUNKER FOR FAEN" + info);
+                    this.bnavn = info; 
                 } 
+                
                 else if (type.equals("MELDING")) {
-                    //Her kommer funksjoner for dersom en melding blir sendt
+                    // Her kommer funksjoner for dersom en melding blir sendt
                 }
+                
                 else if (type.equals("ROM")) {
-                    System.out.println("Dette er et rom: " + info + ", " + type);
-                    sr.add(new SocketRoom(info, new RunningSocket()));
+                    // Her kommer funksjoner for dersom et rom vil bli opprettet
+                    System.out.println("Dette er et rom: " + info + ", " + type); // teste at det funker
+                    
+                    System.out.println("Brukernavn: " + bnavn); // tester lokal variabel 
+                    
+                    romListe.add(new ClientHandler(info, bnavn));
+                    
+                    for(int i = 0; i < romListe.size(); i++)
+                        if(romListe.get(i).getBnavn().equals(bnavn)) 
+                            System.out.println(bnavn + ": Du er herved medlem av grupperom " + romListe.get(i).getRomNmr());
+                }
+                
+                else if(type.equals("JOIN")) {
+                    // Her kommer funksjoner for dersom at noen joiner et rom
                 }
                     
-                //System.out.println("DET FUNKER FOR FAEN " + klientInput);
+                
                 in.close();
                 socket.close();
             }

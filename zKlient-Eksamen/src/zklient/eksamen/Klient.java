@@ -5,7 +5,9 @@
  */
 package zklient.eksamen;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -13,10 +15,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -25,6 +29,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -35,7 +40,7 @@ import javafx.stage.Stage;
 public class Klient extends Application {
     
     enum Type {
-        BNAVN, MELDING, ROM
+        BNAVN, MELDING, ROM, JOIN
     }
     
     static String outputInfo ="";
@@ -47,6 +52,7 @@ public class Klient extends Application {
     static ObjectInputStream in;
     static Socket socket;
     
+    static String bNavn;
     
     static BorderPane bpane;
     //Login deklarasjoner
@@ -62,7 +68,7 @@ public class Klient extends Application {
     static Pane centerRom = new Pane();
     static Pane bottomRom = new Pane();
     static Label labelRom = new Label("Chat-Rom: ");
-    static ListView list = new ListView();
+    static ListView list = new ListView(FXCollections.observableArrayList(Arrays.asList())); // denne deklareres på linje 223 i metoden 'addRoomToList
     static Button btnJoin = new Button("Join");
     static Button btnNew = new Button("Opprett nytt Chat-rom");
     
@@ -121,9 +127,9 @@ public class Klient extends Application {
         btnNew.setLayoutY(7);
         btnNew.setOnAction(e -> openInput());
         
-        list.getItems().add("Item 1");
+        /*list.getItems().add("Item 1");
         list.getItems().add("Item 2");
-        list.getItems().add("Item 3");
+        list.getItems().add("Item 3");*/
         /* Slutt på rom side panes */
         
         /* Chat side panes */
@@ -156,7 +162,7 @@ public class Klient extends Application {
         
         btnLogin.setOnAction((event) -> {
             
-            String bNavn = txtLogin.getText();
+            bNavn = txtLogin.getText();
             if (bNavn.equals("")) {
                 System.out.println("Navn-feltet er tomt");
             } else {
@@ -198,7 +204,7 @@ public class Klient extends Application {
         if(result.isPresent()) {
             txt = result.get(); 
             createNewRoom(txt);
-            addRoomTooList(txt);
+            addRoomToList(txt);
         }
     }
     
@@ -220,8 +226,31 @@ public class Klient extends Application {
     }
     
     
-    public void addRoomTooList(String txt) {
-        list.getItems().add(txt); 
+    public void addRoomToList(String txt) {
+        list.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent t) {
+                try {
+                    System.out.println("Du trykket på: " + list.getSelectionModel().getSelectedItem());
+                    socket = new Socket(host, port);
+                    out = new ObjectOutputStream(socket.getOutputStream());
+                    
+                    String outputInfo = type.JOIN.name() + ";";
+                    outputInfo += bNavn;
+                    out.writeObject(outputInfo);
+                    
+                    /*
+                       Her kommer det kode på hva som skjer etter de har joinet/blitt lagt til i liste med rom
+                    */
+                    
+                    socket.close();
+                    out.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        list.getItems().add(txt);
     }
     
     /*

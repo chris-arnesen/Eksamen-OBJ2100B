@@ -84,6 +84,7 @@ public class Tjener extends Application {
         }
     }
     
+    
     //Laste opp melding fra bruker til databasen
     public static void lastOppMelding() {
     //btn.setOnAction((event) -> {
