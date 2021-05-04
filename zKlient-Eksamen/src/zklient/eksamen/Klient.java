@@ -149,6 +149,10 @@ public class Klient extends Application {
         txtChat.setLayoutX(20);
         txtChat.setLayoutY(7);
         
+          topChat.getChildren().add(labelChat);
+          bottomChat.getChildren().add(txtChat);
+          bottomChat.getChildren().add(btnChat);
+          centerChat.getChildren().add(btnBack);
         /* Slutt på Chat side panes */
         
         Scene scene = new Scene(bpane, 600, 500);
@@ -260,15 +264,7 @@ public class Klient extends Application {
                         bpane.setTop(topChat);
                         bpane.setCenter(centerChat);
                         bpane.setBottom(bottomChat);
-                        topChat.getChildren().add(labelChat);
-                        bottomChat.getChildren().add(txtChat);
-                        bottomChat.getChildren().add(btnChat);
-                        centerChat.getChildren().add(btnBack);
-                        
-                        
                       
-                        
-            
             out.close();
             socket.close();
         } catch (IOException ex) {
