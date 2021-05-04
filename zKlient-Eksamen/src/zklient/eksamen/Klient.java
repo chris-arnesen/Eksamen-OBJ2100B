@@ -43,6 +43,24 @@ public class Klient extends Application {
         BNAVN, MELDING, ROM, JOIN
     }
     
+    public static class ClientRunning extends Thread {
+    
+        public void run() {
+            try {
+                socket = new Socket(host, port);
+                in = new ObjectInputStream(socket.getInputStream());
+                String klientInput = (String)(in.readObject()); 
+                System.out.println(klientInput);
+                socket.close(); 
+            } catch (IOException ex) {
+                Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+    }
+    
     static String outputInfo ="";
     static Type type;
     //Socket
@@ -51,6 +69,8 @@ public class Klient extends Application {
     static ObjectOutputStream out;
     static ObjectInputStream in;
     static Socket socket;
+    //static ClientRunning cr = new ClientRunning();
+    //(new clientRunning()).start();
     
     static String bNavn;
     
@@ -149,11 +169,12 @@ public class Klient extends Application {
         txtChat.setLayoutX(20);
         txtChat.setLayoutY(7);
         
-          topChat.getChildren().add(labelChat);
-          bottomChat.getChildren().add(txtChat);
-          bottomChat.getChildren().add(btnChat);
-          centerChat.getChildren().add(btnBack);
+        topChat.getChildren().add(labelChat);
+        bottomChat.getChildren().add(txtChat);
+        bottomChat.getChildren().add(btnChat);
+        centerChat.getChildren().add(btnBack);
         /* Slutt på Chat side panes */
+        
         
         Scene scene = new Scene(bpane, 600, 500);
         primaryStage.setTitle("Klient");
@@ -205,6 +226,7 @@ public class Klient extends Application {
                     out.close();
                     socket.close();
                     
+                    
                     bpane.getChildren().remove(centerLogin);
                     bpane.getChildren().remove(topLogin);
                     bpane.getChildren().remove(bottomLogin);
@@ -231,20 +253,20 @@ public class Klient extends Application {
         if(result.isPresent()) {
             txt = result.get(); 
             createNewRoom(txt);
-            addRoomToList(txt);
+            //addRoomToList(txt);
         }
     }
     
     public static void backBtn() {
-          btnBack.setOnAction(event -> {                          
-                            bpane.getChildren().remove(topChat);
-                            bpane.getChildren().remove(centerChat);
-                            bpane.getChildren().remove(bottomChat);
+        btnBack.setOnAction(event -> {                          
+            bpane.getChildren().remove(topChat);
+            bpane.getChildren().remove(centerChat);
+            bpane.getChildren().remove(bottomChat);
 
-                            bpane.setTop(topRom);
-                            bpane.setCenter(centerRom);
-                            bpane.setBottom(bottomRom);
-                        });
+            bpane.setTop(topRom);
+            bpane.setCenter(centerRom);
+            bpane.setBottom(bottomRom);
+        });
     }
     
     
@@ -257,16 +279,18 @@ public class Klient extends Application {
             outputInfo += txt;        
             out.writeObject(outputInfo);
             
-                        bpane.getChildren().remove(topRom);
-                        bpane.getChildren().remove(centerRom);
-                        bpane.getChildren().remove(bottomRom);
+            
+            bpane.getChildren().remove(topRom);
+            bpane.getChildren().remove(centerRom);
+            bpane.getChildren().remove(bottomRom);
 
-                        bpane.setTop(topChat);
-                        bpane.setCenter(centerChat);
-                        bpane.setBottom(bottomChat);
+            bpane.setTop(topChat);
+            bpane.setCenter(centerChat);
+            bpane.setBottom(bottomChat);
                       
             out.close();
             socket.close();
+            
         } catch (IOException ex) {
             Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -293,8 +317,8 @@ public class Klient extends Application {
                        
                     
                     in = new ObjectInputStream(socket.getInputStream());
-                    String klientInput = (String)(in.readObject()); 
-                    System.out.println(klientInput);
+                    String tjenerInput = (String)(in.readObject()); 
+                    System.out.println(tjenerInput);
                     
                     socket.close();
                     out.close();
@@ -338,6 +362,18 @@ public class Klient extends Application {
         logInn();
         backBtn();
         //chat();
+        
+//        (new clientRunning()).start();
+        /*try {
+            socket = new Socket(host, port);
+            in = new ObjectInputStream(socket.getInputStream());
+            String klientInput = (String)(in.readObject()); 
+            System.out.println(klientInput);
+        } catch (IOException ex) {
+            Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
         launch(args);
     }
     
