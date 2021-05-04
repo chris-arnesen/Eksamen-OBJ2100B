@@ -74,6 +74,18 @@ public class RunningSocket extends Thread {
                 
                 else if(type.equals("JOIN")) {
                     // Her kommer funksjoner for dersom at noen joiner et rom
+                    System.out.println(bnavn + " vil joine rom " + info); // test om jeg fikk riktig input
+                    
+                    romListe.add(new ClientHandler(info, bnavn));
+                    
+                    out = new ObjectOutputStream(socket.getOutputStream());
+                    
+                    String outputInfo = bnavn + ";" + info;
+                    
+                    out.writeObject(outputInfo);
+                    
+                    out.close();
+                    socket.close();
                 }
                     
                 

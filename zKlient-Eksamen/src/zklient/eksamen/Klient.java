@@ -259,16 +259,23 @@ public class Klient extends Application {
                     out = new ObjectOutputStream(socket.getOutputStream());
                     
                     String outputInfo = type.JOIN.name() + ";";
-                    outputInfo += bNavn;
+                    outputInfo += list.getSelectionModel().getSelectedItem();
                     out.writeObject(outputInfo);
                     
                     /*
-                       Her kommer det kode på hva som skjer etter de har joinet/blitt lagt til i liste med rom
+                        Her kommer det kode på hva som skjer etter
+                        de har joinet/blitt lagt til i liste med rom:
                     */
+                    
+                    in = new ObjectInputStream(socket.getInputStream());
+                    String klientInput = (String)(in.readObject()); 
+                    System.out.println(klientInput);
                     
                     socket.close();
                     out.close();
                 } catch (IOException ex) {
+                    Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
