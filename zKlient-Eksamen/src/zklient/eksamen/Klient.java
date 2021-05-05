@@ -137,6 +137,7 @@ public class Klient extends Application {
                     out.writeObject(utTekst);
                     out.flush();
                 }
+                txtChat.clear();
             }catch(IOException ex) {System.out.println("Feil med send melding-funksjon");}
         });
         
@@ -221,11 +222,14 @@ public class Klient extends Application {
         btnChat.setLayoutY(7);
         txtChat.setLayoutX(20);
         txtChat.setLayoutY(7);
+        btnBack.setLayoutX(530);
+        btnBack.setLayoutY(7);
+        centerChat.setEditable(false);
         
-          topChat.getChildren().add(labelChat);
-          bottomChat.getChildren().add(txtChat);
-          bottomChat.getChildren().add(btnChat);
-          topChat.getChildren().add(btnBack);
+        topChat.getChildren().add(labelChat);
+        bottomChat.getChildren().add(txtChat);
+        bottomChat.getChildren().add(btnChat);
+        topChat.getChildren().add(btnBack);
         /* Slutt på Chat side panes */
         
         Scene scene = new Scene(bpane, 600, 500);

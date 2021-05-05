@@ -50,14 +50,13 @@ public class klientThread implements Runnable{
                     klientVindu.addChatrom(beskjed);
                     /*klientVindu.addChatrom(beskjed);
                     klientVindu.list.getItems().add(beskjed);*/
-                }
-                
-                if(typeInput.equals("MELDING"))
+                }else if(typeInput.equals("MELDING")){
                     System.out.println(beskjed);
-                 Platform.runLater(() -> {
-                    //display the message in the textarea
-                    klientVindu.centerChat.appendText(tjenerMelding + "\n");
-                });
+                    Platform.runLater(() -> {
+                        //display the message in the textarea
+                        klientVindu.centerChat.appendText(beskjed + "\n");
+                    });
+                }
                 
                 //System.out.println(tjenerMelding); //Vet ikke om break trengs, veldig usikker på den
             } catch (IOException ex) {System.out.println("ERROR IO-feil på linje 31-35 i klientThread"); //break;
