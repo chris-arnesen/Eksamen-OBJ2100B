@@ -16,7 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -30,10 +29,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-/**
- *
- * @author Mats Engesund
- */
+
 public class Klient extends Application {
 
     private static void forlatRommet() {
@@ -68,7 +64,7 @@ public class Klient extends Application {
     
     
     static BorderPane bpane;
-    //Login deklarasjoner
+    //GUI-deklarasjoner til Login siden
     static Pane topLogin = new Pane();
     static Pane centerLogin = new Pane();
     static Pane bottomLogin = new Pane();
@@ -77,7 +73,7 @@ public class Klient extends Application {
     static Button btnLogin = new Button("Log inn");
     
     
-    //Rom deklarasjoner
+    //GUI-deklarasjoner til Rom siden
     static Pane topRom = new Pane();
     static Pane centerRom = new Pane();
     static Pane bottomRom = new Pane();
@@ -90,7 +86,7 @@ public class Klient extends Application {
     static Button btnNew = new Button("Opprett nytt Chat-rom");
     
     
-    //Chat deklarasjoner
+    //GUI-deklarasjoner til Chat siden
     static Pane topChat = new Pane();
     static TextArea centerChat = new TextArea();
     static Pane bottomChat = new Pane();
@@ -115,10 +111,9 @@ public class Klient extends Application {
         bpane.setTop(topLogin);
         bpane.setCenter(centerLogin);
         bpane.setBottom(bottomLogin);
-        btnLogin.setOnAction(new ButtonListener());
+        
 
-        //Prøver meg på button Action
-        //Det som skal skje når en trykker på login-knappen
+        //Button action for login-knapp
         btnLogin.setOnAction(e -> {
             try {
                 if (txtLogin.getText().equals("")) {
@@ -142,7 +137,7 @@ public class Klient extends Application {
                 }
             } catch (IOException ex) {System.out.println("Feil med login-funksjon");}
         });
-        
+        //button action for chat-knapp
         btnChat.setOnAction(e -> {
             try {
                 if (txtChat.getText().equals("")) {
@@ -187,6 +182,8 @@ public class Klient extends Application {
         labelRom.setStyle("-fx-text-fill:BLACK; -fx-font-size: 30;");
         list.setPrefWidth(600);
         
+        
+        //Dersom en bruker trykker på et rom i GUI'et
         list.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -306,6 +303,7 @@ public class Klient extends Application {
     /**
      *
      */
+    //Action for backBtn, knapp for når bruker vil ut av et rom
     public static void backBtn() {
         btnBack.setOnAction(event -> {  
             forlatRommet();
@@ -330,15 +328,5 @@ public class Klient extends Application {
     }
     
     
-    private class ButtonListener implements EventHandler<ActionEvent> {
-        @Override
-        public void handle(ActionEvent e) {
-            try {
-            String inputFieldTekst = txtLogin.getText();
-            out.writeObject(inputFieldTekst);
-            out.flush();
-            }catch(IOException ex) {System.out.println("ERROR IO-feil på linje 71-74 på ZzKlient");}
-        }
-    }
     
 }

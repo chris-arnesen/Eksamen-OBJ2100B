@@ -8,16 +8,9 @@ package ztjener.eksamen;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 
-/**
- *
- * @author Mats Engesund
- */
+
 public class RunningSocket implements Runnable {
     
     Socket socket;
@@ -28,11 +21,19 @@ public class RunningSocket implements Runnable {
         
     String brukernavn ="";
     
+    /**
+     *
+     * @param innSocket
+     * @param tjener
+     */
     public RunningSocket(Socket innSocket, Tjener tjener) {
         this.socket = innSocket;
         this.tjener = tjener;
     }
     
+    /**
+     *
+     */
     @Override
     public void run() {
         
@@ -57,6 +58,7 @@ public class RunningSocket implements Runnable {
                         if (tjener.rom.size() > 0 ) {
                             giRom();
                         }
+                        //Det samme her, bare med meldinger istedet for rom
                         if (tjener.alleMeldinger.size() > 0) {
                             giTidligereMeldinger();
                         }
@@ -66,15 +68,14 @@ public class RunningSocket implements Runnable {
                         tjener.lastOppMelding(beskjed, brukernavn); //Laster opp meldingen til databasen
                         String meldingTilAlle = "[" + brukernavn + "] " + beskjed; 
                         tjener.alleMeldinger.add(typeInput + ";" + meldingTilAlle); //Legger meldingene inn i en liste
-                        tjener.broadcast(typeInput + ";" + meldingTilAlle);
+                        tjener.sendToAllClients(typeInput + ";" + meldingTilAlle);
                     }
                     
                     else if (typeInput.equals("ROM")) {
-                        // blablabla lager rom
                         // Sender melding til alle klienter og ber om å legge til rom i liste
                         String meldingTilAlle = type.CREATE.name() + ";" + beskjed;
                         tjener.rom.add(meldingTilAlle); //Legger til romkommando inn i en liste
-                        tjener.broadcast(meldingTilAlle);
+                        tjener.sendToAllClients(meldingTilAlle);
                         
                         // Legger til rom i liste på tjener-siden
                         brukernavn = splitString[2];
@@ -88,7 +89,6 @@ public class RunningSocket implements Runnable {
                         brukernavn = splitString[2];
                         RomListe rl = new RomListe(brukernavn, beskjed);
                         tjener.romListe.add(rl); 
-                        //tjener.listView.getItems().add(beskjed);
                     }
                     
                     else if (typeInput.equals("REMOVE")) {
@@ -102,33 +102,40 @@ public class RunningSocket implements Runnable {
                                 else if(tjener.romListe.get(i).klienter.isEmpty()) {
                                     tjener.romListe.remove(i);
                                     
-                                    tjener.broadcast(type.EMPTY.name() + ";" + romNmr);
+                                    tjener.sendToAllClients(type.EMPTY.name() + ";" + romNmr);
                                 }
                             }
                             
                         }
                     }
                     
-                    //tjener.broadcast(linje);
-                }catch (ClassNotFoundException ex) {System.out.println("ERROR på fil connectionThread 36-40");} 
+                }catch (ClassNotFoundException ex) {System.out.println("ERROR CNF-feil på fil RunningSocket");} 
                 
             }
-        }catch(IOException ex) {System.out.println("ERROR, IO-feil på linje 35-49 på connectionThread");
+        }catch(IOException ex) {System.out.println("ERROR, IO-feil i RunningSocket");
         } finally {
             try {
                 socket.close();
-            } catch (IOException ex) {System.out.println("ERROR IO-feil på linje 47-49");}
+            } catch (IOException ex) {System.out.println("ERROR IO-feil på linje 115-119");}
         }
         
         
     }
         
+    /**
+     *
+     * @param melding
+     */
     public void skrivMelding(String melding) {
         try {
             out.writeUTF(melding);
             out.flush();
-        } catch (IOException ex) {System.out.println("ERROR IO-feil på linje 55-57 i ConnectionThread");}
+        } catch (IOException ex) {System.out.println("ERROR IO-feil på linje 130-133 i RunningSocket");}
     }
+
+    /**
+     *
+     */
     public void giRom() {
         try {
             for (String etRom : tjener.rom) {
@@ -137,6 +144,9 @@ public class RunningSocket implements Runnable {
         }catch(IOException ex) {System.out.println("Kunne ikke gi ny bruker eksisterende rom");}
     }
     
+    /**
+     *
+     */
     public void giTidligereMeldinger() {
         try {
             for (String enMelding : tjener.alleMeldinger) {
