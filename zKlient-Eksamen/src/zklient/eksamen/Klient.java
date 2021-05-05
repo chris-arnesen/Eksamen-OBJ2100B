@@ -45,12 +45,13 @@ public class Klient extends Application {
     
     static String outputInfo ="";
     static Type type;
+    
     //Socket
     static int port = 8000;
     static String host = "localhost";
-    static ObjectOutputStream out;
-    static ObjectInputStream in;
-    static Socket socket;
+    static ObjectOutputStream out = null;
+    
+    
     
     static String bNavn;
     
@@ -62,6 +63,7 @@ public class Klient extends Application {
     static Label topLabelLogin = new Label("Tast inn brukernavn: ");
     static TextField txtLogin = new TextField();
     static Button btnLogin = new Button("Log inn");
+    
     
     //Rom deklarasjoner
     static Pane topRom = new Pane();
@@ -90,6 +92,7 @@ public class Klient extends Application {
         bpane.setTop(topLogin);
         bpane.setCenter(centerLogin);
         bpane.setBottom(bottomLogin);
+      btnLogin.setOnAction(new ButtonListener());
         
         topLogin.setPrefHeight(100);
         topLogin.setStyle("-fx-border-color: black; -fx-background-color: grey;");
@@ -125,7 +128,7 @@ public class Klient extends Application {
         labelRom.setLayoutY(7);
         btnNew.setLayoutX(25);
         btnNew.setLayoutY(7);
-        btnNew.setOnAction(e -> openInput());
+        //btnNew.setOnAction(e -> openInput());
         
         /*list.getItems().add("Item 1");
         list.getItems().add("Item 2");
@@ -159,33 +162,25 @@ public class Klient extends Application {
         primaryStage.setTitle("Klient");
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
-    
-    
-    public static void sendMelding() {
         
-        btnChat.setOnAction(event -> {
-            System.out.println("Du trykka på send-knappen");
-            String melding = txtChat.getText();
-            if (melding.equals("")) {
-                System.out.println("Du har ikke skrevet noe, i meldingsboksen");
-            } else {
-                try {
-                    socket = new Socket(host, port);
-                    out = new ObjectOutputStream(socket.getOutputStream());
-                    
-                    String outputInfo = type.MELDING.name()+";";
-                    outputInfo+=melding;
-                    out.writeObject(outputInfo);
-                    out.close();
-                    socket.close();
-                } catch (IOException ex) {}
-            }
+        // Alt dette er socket kommunikasjon, input til server, åpnes en gang, mens vi hører etter 
+        //    output fra server i en annen thread hele tiden
+        try {
+            Socket socket = new Socket(host, port);
+            System.out.println("Koblet til server");
             
-        });
+            out = new ObjectOutputStream(socket.getOutputStream());
+            klientThread inputListener = new klientThread(socket, this); 
+            Thread t = new Thread(inputListener);
+            t.start();
+        }catch(IOException ex){System.out.println("Tilkobling til server feilet");}
+        
     }
     
-    public static void logInn() {
+    
+    
+    
+    /*public static void logInn() {
         
         btnLogin.setOnAction((event) -> {
             
@@ -218,23 +213,23 @@ public class Klient extends Application {
                 } catch (IOException ex) { System.out.println("Feil med forbindelse til tjener"); }
             }
         });   
-    }
+    }*/
     
     
-    public void openInput() {
+    /*public void openInput() {
         String txt = "";
         TextInputDialog txtBox = new TextInputDialog("Chatroom name");
         txtBox.setHeaderText("Create New Chatroom");
         Optional<String> result = txtBox.showAndWait();
-        
+    */  
         /* Måte å hente ut verdien på */
-        if(result.isPresent()) {
+    /*    if(result.isPresent()) {
             txt = result.get(); 
             createNewRoom(txt);
             addRoomToList(txt);
         }
     }
-    
+    */
     public static void backBtn() {
           btnBack.setOnAction(event -> {                          
                             bpane.getChildren().remove(topChat);
@@ -247,7 +242,7 @@ public class Klient extends Application {
                         });
     }
     
-    
+    /*
     public void createNewRoom(String txt) {
         try {
             socket = new Socket(host, port);
@@ -270,9 +265,9 @@ public class Klient extends Application {
         } catch (IOException ex) {
             Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
     
-    
+    /*
     public void addRoomToList(String txt) {
         list.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -291,7 +286,7 @@ public class Klient extends Application {
                         de har joinet/blitt lagt til i liste med rom:
                     */
                        
-                    
+                    /*
                     in = new ObjectInputStream(socket.getInputStream());
                     String klientInput = (String)(in.readObject()); 
                     System.out.println(klientInput);
@@ -306,7 +301,7 @@ public class Klient extends Application {
             }
         });
         list.getItems().add(txt);
-    }
+    }*/
     
     /*
     public static void chat() {
@@ -334,11 +329,22 @@ public class Klient extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        sendMelding();
-        logInn();
+        //sendMelding();
+        //logInn();
         backBtn();
         //chat();
         launch(args);
+    }
+    
+    private class ButtonListener implements EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent e) {
+            try {
+            String inputFieldTekst = txtLogin.getText();
+            out.writeObject(inputFieldTekst);
+            out.flush();
+            }catch(IOException ex) {System.out.println("ERROR IO-feil på linje 71-74 på ZzKlient");}
+        }
     }
     
 }

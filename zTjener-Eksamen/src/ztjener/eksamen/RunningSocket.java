@@ -5,6 +5,7 @@
  */
 package ztjener.eksamen;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -17,83 +18,49 @@ import java.util.ArrayList;
  *
  * @author Mats Engesund
  */
-public class RunningSocket extends Thread {
+public class RunningSocket implements Runnable {
     
-    static int port = 8000;
-    static ObjectOutputStream out;
-    static ObjectInputStream in;
-    static ServerSocket server;
-    static Socket socket;
-    ArrayList<ClientHandler> romListe;
-    String bnavn;
-        
+    Socket socket;
+    ObjectInputStream in;
+    DataOutputStream out;
+    Tjener tjener;
     
-    public RunningSocket() {
-        romListe = new ArrayList<>();
+    public RunningSocket(Socket innSocket, Tjener tjener) {
+        this.socket = innSocket;
+        this.tjener = tjener;
     }
     
-    @Override() 
+    @Override
     public void run() {
+        
         try {
-            server = new ServerSocket(port);
-            String bruker = "";    
+            in = new ObjectInputStream(socket.getInputStream());
+            out = new DataOutputStream(socket.getOutputStream());
             while(true) {
-                socket = server.accept();
-                in = new ObjectInputStream(socket.getInputStream());
-                String klientInput = (String)(in.readObject()); // Her får du melding som blir sendt fra klient
-                    
-                String[] arrOfStr = klientInput.split(";");
-                String type = arrOfStr[0];
-                String info = arrOfStr[1];
                 
-                if (type.equals("BNAVN")) {
-                   // Her kommer funksjoner for dersom et brukernavn blir sendt
-                    bruker = info;
-                    System.out.println("Dette er et brukernavn.. ps DET FUNKER FOR FAEN" + info);
-                    this.bnavn = info; 
-                } 
+                try {
+                    String linje = (String)in.readObject();
+                    System.out.println(linje);
+                    tjener.broadcast(linje);
+                }catch (ClassNotFoundException ex) {System.out.println("ERROR på fil connectionThread 36-40");} 
                 
-                else if (type.equals("MELDING")) {
-                    // Her kommer funksjoner for dersom en melding blir sendt
-                    Tjener.lastOppMelding(info, bruker);
-                    System.out.println("Melding ble sendt!");
-                }
-                
-                else if (type.equals("ROM")) {
-                    // Her kommer funksjoner for dersom et rom vil bli opprettet
-                    System.out.println("Dette er et rom: " + info + ", " + type); // teste at det funker
-                    
-                    System.out.println("Brukernavn: " + bnavn); // tester lokal variabel 
-                    
-                    romListe.add(new ClientHandler(info, bnavn));
-                    
-                    for(int i = 0; i < romListe.size(); i++)
-                        if(romListe.get(i).getBnavn().equals(bnavn)) 
-                            System.out.println(bnavn + ": Du er herved medlem av grupperom " + romListe.get(i).getRomNmr());
-                }
-                
-                else if(type.equals("JOIN")) {
-                    // Her kommer funksjoner for dersom at noen joiner et rom
-                    System.out.println(bnavn + " vil joine rom " + info); // test om jeg fikk riktig input
-                    
-                    romListe.add(new ClientHandler(info, bnavn));
-                    
-                    out = new ObjectOutputStream(socket.getOutputStream());
-                    
-                    String outputInfo = bnavn + ";" + info;
-                    
-                    out.writeObject(outputInfo);
-                    
-                    out.close();
-                    socket.close();
-                }
-                    
-                
-                in.close();
-                socket.close();
             }
-        } catch(IOException | ClassNotFoundException ex) {
+        }catch(IOException ex) {System.out.println("ERROR, IO-feil på linje 35-49 på connectionThread");
+        } finally {
+            try {
+                socket.close();
+            } catch (IOException ex) {System.out.println("ERROR IO-feil på linje 47-49");}
         }
+        
+        
     }
+        
+    public void skrivMelding(String melding) {
+        try {
+            out.writeUTF(melding);
+            out.flush();
+        } catch (IOException ex) {System.out.println("ERROR IO-feil på linje 55-57 i ConnectionThread");}
+    }
+    
     
 }

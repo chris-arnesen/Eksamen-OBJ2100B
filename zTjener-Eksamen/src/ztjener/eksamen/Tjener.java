@@ -19,6 +19,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -38,12 +40,13 @@ public class Tjener extends Application {
     
     
     //Socket 
-    static int port = 8000;
-    static ObjectOutputStream out;
-    static ObjectInputStream in;
-    static ServerSocket server;
-    static Socket socket;
-    static RunningSocket rs;
+    final static int port = 8000;
+    List<RunningSocket> connections = new ArrayList<RunningSocket>(); //Listen inneholder alle klient-threads
+    //static ObjectOutputStream out;
+    //static ObjectInputStream in;
+    //static ServerSocket server;
+    //static Socket socket;
+    //static RunningSocket rs;
     
     
     // Listview
@@ -110,6 +113,23 @@ public class Tjener extends Application {
         primaryStage.setTitle("Tjener");
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+      //Her starter vi en ny Thread for å ikke stoppe JavaFX threaden, inni threaden, venter vi på at folk skal koble seg til
+      //Når de gjør det, så gir vi dem en ny Thread, HVER KLIENT HAR ALSTÅ EN THREAD MED EN TILKOBLING
+        new Thread(() -> {
+            try {
+                ServerSocket server = new ServerSocket(port);
+                while (true) {
+                    Socket socket = server.accept();
+                    System.out.println("Noen koblet seg til");
+                    RunningSocket enConnection = new RunningSocket(socket, this);
+                    connections.add(enConnection);
+                    
+                    Thread t = new Thread(enConnection);
+                    t.start();
+                }
+            }catch (IOException ex) {System.out.println("ERROR, IO-feil på linje 32-41 i ZzTjener");}
+        }).start();
     }
         
     
@@ -131,14 +151,18 @@ public class Tjener extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {  
-        rs = new RunningSocket(); 
-        rs.start();
+        
 
         createNewTable();
         
         //createNewTable();
 
         launch(args);
+    }
+    public void broadcast(String melding) {
+        this.connections.forEach(con -> {
+            con.skrivMelding(melding);
+        });
     }
     
 }
