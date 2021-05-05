@@ -135,15 +135,23 @@ public class Klient extends Application {
                     centerRom.getChildren().add(list);
                     bottomRom.getChildren().add(btnNew);
                 }
-            } catch (IOException ex) {
-                Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            } catch (IOException ex) {System.out.println("Feil med login-funksjon");}
         });
         //Det som skal skje dersom en bruker trykker på knappen for å sende en melding
         /*btnChat.setOnAction(e -> {
             if (txt)
         });*/
-        
+        btnChat.setOnAction(e -> {
+            try {
+                if (txtChat.getText().equals("")) {
+                    System.out.println("Feil: Du har ikke skrevet inn en melding");
+                } else {
+                    String utTekst = type.MELDING.name() + ";" + txtChat.getText();
+                    out.writeObject(utTekst);
+                    out.flush();
+                }
+            }catch(IOException ex) {System.out.println("Feil med send melding-funksjon");}
+        });
         
         
         topLogin.setPrefHeight(100);
