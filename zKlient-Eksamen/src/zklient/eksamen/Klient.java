@@ -79,10 +79,10 @@ public class Klient extends Application {
     static Pane topChat = new Pane();
     static TextArea centerChat = new TextArea();
     static Pane bottomChat = new Pane();
-    static Label labelChat = new Label("Her kommer rom navnet ;)");
+    static Label labelChat = new Label();
     static TextField txtChat = new TextField();
     static Button btnChat = new Button("Send");
-    static Button btnBack = new Button("Tilbake");
+    static Button btnBack = new Button("Forlat rom");
     
     
     public void addChatrom(String txt) {
@@ -137,6 +137,7 @@ public class Klient extends Application {
                     out.writeObject(utTekst);
                     out.flush();
                 }
+                txtChat.clear();
             }catch(IOException ex) {System.out.println("Feil med send melding-funksjon");}
         });
         
@@ -221,6 +222,9 @@ public class Klient extends Application {
         btnChat.setLayoutY(7);
         txtChat.setLayoutX(20);
         txtChat.setLayoutY(7);
+        btnBack.setLayoutX(530);
+        btnBack.setLayoutY(7);
+        centerChat.setEditable(false);
         
         topChat.getChildren().add(labelChat);
         bottomChat.getChildren().add(txtChat);

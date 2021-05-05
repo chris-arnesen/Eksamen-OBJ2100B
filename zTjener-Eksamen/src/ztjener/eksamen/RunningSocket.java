@@ -53,11 +53,19 @@ public class RunningSocket implements Runnable {
                     if (typeInput.equals("BNAVN")) {
                         brukernavn = beskjed;
                         System.out.println("Ny bruker med navn: " + brukernavn);
+                        //Dersom brukere har lagt til rom, og denne brukeren er ny, send kommandoer til klienten, om å opprette rom
+                        if (tjener.rom.size() > 0 ) {
+                            giRom();
+                        }
+                        if (tjener.alleMeldinger.size() > 0) {
+                            giTidligereMeldinger();
+                        }
                     } 
                     
                     else if (typeInput.equals("MELDING")) {
                         tjener.lastOppMelding(beskjed, brukernavn); //Laster opp meldingen til databasen
                         String meldingTilAlle = "[" + brukernavn + "] " + beskjed; 
+                        tjener.alleMeldinger.add(typeInput + ";" + meldingTilAlle); //Legger meldingene inn i en liste
                         tjener.broadcast(typeInput + ";" + meldingTilAlle);
                     }
                     
@@ -65,6 +73,7 @@ public class RunningSocket implements Runnable {
                         // blablabla lager rom
                         // Sender melding til alle klienter og ber om å legge til rom i liste
                         String meldingTilAlle = type.CREATE.name() + ";" + beskjed;
+                        tjener.rom.add(meldingTilAlle); //Legger til romkommando inn i en liste
                         tjener.broadcast(meldingTilAlle);
                         
                         // Legger til rom i liste på tjener-siden
@@ -102,6 +111,20 @@ public class RunningSocket implements Runnable {
             out.flush();
         } catch (IOException ex) {System.out.println("ERROR IO-feil på linje 55-57 i ConnectionThread");}
     }
+    public void giRom() {
+        try {
+            for (String etRom : tjener.rom) {
+                out.writeUTF(etRom);
+            }
+        }catch(IOException ex) {System.out.println("Kunne ikke gi ny bruker eksisterende rom");}
+    }
     
+    public void giTidligereMeldinger() {
+        try {
+            for (String enMelding : tjener.alleMeldinger) {
+                out.writeUTF(enMelding);
+            }
+        }catch(IOException ex) {System.out.println("Kunne ikke gi ny bruker tidligere eksisterende meldinger");}
+    }
     
 }

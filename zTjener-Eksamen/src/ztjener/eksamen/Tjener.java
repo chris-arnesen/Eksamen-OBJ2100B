@@ -45,6 +45,8 @@ public class Tjener extends Application {
     //Socket 
     final static int port = 8000;
     List<RunningSocket> connections = new ArrayList<RunningSocket>(); //Listen inneholder alle klient-threads
+    List<String> rom = new ArrayList<>();
+    List<String> alleMeldinger = new ArrayList<>();
     //static ObjectOutputStream out;
     //static ObjectInputStream in;
     //static ServerSocket server;
@@ -199,5 +201,7 @@ public class Tjener extends Application {
             con.skrivMelding(melding);
         });
     }
+    
+    
     
 }
