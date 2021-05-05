@@ -27,6 +27,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
@@ -75,7 +76,7 @@ public class Klient extends Application {
     
     //Chat deklarasjoner
     static Pane topChat = new Pane();
-    static Pane centerChat = new Pane();
+    static TextArea centerChat = new TextArea();
     static Pane bottomChat = new Pane();
     static Label labelChat = new Label("Her kommer rom navnet ;)");
     static TextField txtChat = new TextField();
@@ -215,7 +216,7 @@ public class Klient extends Application {
           topChat.getChildren().add(labelChat);
           bottomChat.getChildren().add(txtChat);
           bottomChat.getChildren().add(btnChat);
-          centerChat.getChildren().add(btnBack);
+          topChat.getChildren().add(btnBack);
         /* Slutt på Chat side panes */
         
         Scene scene = new Scene(bpane, 600, 500);

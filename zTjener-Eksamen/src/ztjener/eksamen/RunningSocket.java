@@ -56,9 +56,9 @@ public class RunningSocket implements Runnable {
                     } 
                     
                     else if (typeInput.equals("MELDING")) {
-                        Tjener.lastOppMelding(beskjed, brukernavn); //Laster opp meldingen til databasen
+                        tjener.lastOppMelding(beskjed, brukernavn); //Laster opp meldingen til databasen
                         String meldingTilAlle = "[" + brukernavn + "] " + beskjed; 
-                        tjener.broadcast(meldingTilAlle);
+                        tjener.broadcast(typeInput + ";" + meldingTilAlle);
                     }
                     
                     else if (typeInput.equals("ROM")) {
