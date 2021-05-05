@@ -56,11 +56,16 @@ public class klientThread implements Runnable{
                 }
                 else if(typeInput.equals("MELDING")){
                     System.out.println(beskjed);
-                    Platform.runLater(() -> {
-                        //display the message in the textarea
-                        klientVindu.centerChat.appendText(beskjed + "\n");
-                        
-                    });
+                    String[] mldSplit = beskjed.split(":"); //Beskjed struktur - "melding:romnavn" eks("heisann:rom1")
+                    String mld = mldSplit[0];
+                    String mldRom = mldSplit[1];
+                    klientVindu.alleMeldinger.add(beskjed);
+                    if (mldSplit[1].equals(klientVindu.aktivtRom)) {
+                        Platform.runLater(() -> {
+                            //display the message in the textarea
+                            klientVindu.centerChat.appendText(mldSplit[0] + "\n");    
+                        });
+                    }
                 }
                 
                 

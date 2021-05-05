@@ -15,7 +15,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,6 +63,9 @@ public class Klient extends Application {
     static int port = 8000;
     static String host = "localhost";
     static ObjectOutputStream out = null;
+    
+    static String aktivtRom=""; //navnet på rommet som brukeren er i nå
+    static List<String> alleMeldinger = new ArrayList<>();
     
     
     static String bNavn;
@@ -143,7 +148,7 @@ public class Klient extends Application {
                 if (txtChat.getText().equals("")) {
                     System.out.println("Feil: Du har ikke skrevet inn en melding");
                 } else {
-                    String utTekst = type.MELDING.name() + ";" + txtChat.getText();
+                    String utTekst = type.MELDING.name() + ";" + txtChat.getText() + ":" + aktivtRom;
                     out.writeObject(utTekst);
                     out.flush();
                 }
@@ -188,6 +193,16 @@ public class Klient extends Application {
                 if (list.getSelectionModel().getSelectedItem().equals(list.getSelectionModel().getSelectedItem())) {
                     try {
                         String utTekst = type.JOIN.name() + ";" + list.getSelectionModel().getSelectedItem() + ";" + bNavn;
+                        aktivtRom = (String)list.getSelectionModel().getSelectedItem();
+                        labelChat.setText(aktivtRom);
+                        //Denne for-loopen viser alle meldinger tilhørende til det rommet, når en trykker seg inn på et rom
+                        for (String s :alleMeldinger) {
+                            String[] split = s.split(":"); //melding:romnr
+                            if (split[1].equals(aktivtRom)) {
+                                centerChat.appendText(split[0]+"\n");
+                            }
+                        }
+                        
                         out.writeObject(utTekst);
                         out.flush();
                         
@@ -310,6 +325,7 @@ public class Klient extends Application {
         if(result.isPresent()) {
             try {
                 String utTekst = type.ROM.name() + ";" + result.get() + ";" + bNavn;
+                aktivtRom = result.get();
                 out.writeObject(utTekst);
                 out.flush();
                 
@@ -329,7 +345,7 @@ public class Klient extends Application {
     public static void backBtn() {
         btnBack.setOnAction(event -> {  
             forlatRommet();
-            
+            centerChat.clear();
             bpane.getChildren().remove(topChat);
             bpane.getChildren().remove(centerChat);
             bpane.getChildren().remove(bottomChat);
