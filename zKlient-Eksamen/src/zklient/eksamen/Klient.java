@@ -52,8 +52,8 @@ public class Klient extends Application {
     static ObjectOutputStream out = null;
     
     
-    
     static String bNavn;
+    
     
     static BorderPane bpane;
     //Login deklarasjoner
@@ -70,8 +70,9 @@ public class Klient extends Application {
     static Pane centerRom = new Pane();
     static Pane bottomRom = new Pane();
     static Label labelRom = new Label("Chat-Rom: ");
-    static ListView list = new ListView(FXCollections.observableArrayList(Arrays.asList())); // denne deklareres på linje 223 i metoden 'addRoomToList
+    public static ListView list = new ListView(FXCollections.observableArrayList(Arrays.asList()));
     static Button btnNew = new Button("Opprett nytt Chat-rom");
+    
     
     //Chat deklarasjoner
     static Pane topChat = new Pane();
@@ -85,21 +86,6 @@ public class Klient extends Application {
     
     public void addChatrom(String txt) {
         list.getItems().add(txt);
-        
-        list.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if(list.getSelectionModel().getSelectedItem().equals(txt)) {
-                    try {
-                        String utTekst = type.JOIN.name() + ";" + bNavn + ";" + list.getSelectionModel().getSelectedItem();
-                        out.writeObject(utTekst);
-                        out.flush();
-                    } catch (IOException ex) {
-                        Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        });
     }
     
     @Override
@@ -183,6 +169,29 @@ public class Klient extends Application {
         bottomRom.setStyle("-fx-border-color: black; -fx-background-color: grey;");
         labelRom.setStyle("-fx-text-fill:BLACK; -fx-font-size: 30;");
         list.setPrefWidth(600);
+        
+        list.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (list.getSelectionModel().getSelectedItem().equals(list.getSelectionModel().getSelectedItem())) {
+                    try {
+                        String utTekst = type.JOIN.name() + ";" + bNavn + ";" + list.getSelectionModel().getSelectedItem();
+                        out.writeObject(utTekst);
+                        out.flush();
+                        
+                        bpane.getChildren().remove(topRom);
+                        bpane.getChildren().remove(centerRom);
+                        bpane.getChildren().remove(bottomRom);
+
+                        bpane.setTop(topChat);
+                        bpane.setCenter(centerChat);
+                        bpane.setBottom(bottomChat);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
         
         labelRom.setLayoutX(25);
         labelRom.setLayoutY(7);

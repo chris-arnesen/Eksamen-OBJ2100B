@@ -8,6 +8,9 @@ package zklient.eksamen;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Arrays;
+import javafx.collections.FXCollections;
+import javafx.scene.control.ListView;
 
 /**
  *
@@ -42,8 +45,10 @@ public class klientThread implements Runnable{
                
                 /* SJEKKER HVA TYPEINFOEN BETYR*/
                 if(typeInput.equals("CREATE")) {
-                    System.out.println("Noen lagde et chatrom");
+                    System.out.println("Noen lagde et chatrom: " + " " + tjenerMelding);
                     klientVindu.addChatrom(beskjed);
+                    /*klientVindu.addChatrom(beskjed);
+                    klientVindu.list.getItems().add(beskjed);*/
                 }
                 
                 //System.out.println(tjenerMelding); //Vet ikke om break trengs, veldig usikker på den
