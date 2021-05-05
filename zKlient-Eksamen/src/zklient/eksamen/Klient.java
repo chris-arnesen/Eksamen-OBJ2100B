@@ -92,7 +92,38 @@ public class Klient extends Application {
         bpane.setTop(topLogin);
         bpane.setCenter(centerLogin);
         bpane.setBottom(bottomLogin);
-      btnLogin.setOnAction(new ButtonListener());
+        //Prøver meg på button Action
+        //Det som skal skje når en trykker på login-knappen
+        btnLogin.setOnAction(e -> {
+            try {
+                if (txtLogin.getText().equals("")) {
+                    System.out.println("Feil: Du har ikke skrevet inn et brukernavn");
+                } else {
+                    String utTekst = type.BNAVN.name() + ";" + txtLogin.getText();
+                    out.writeObject(utTekst);
+                    out.flush();
+                    
+                    bpane.getChildren().remove(centerLogin);
+                    bpane.getChildren().remove(topLogin);
+                    bpane.getChildren().remove(bottomLogin);
+                    
+                    bpane.setTop(topRom);
+                    bpane.setCenter(centerRom);
+                    bpane.setBottom(bottomRom);
+                    topRom.getChildren().add(labelRom);
+                    centerRom.getChildren().add(list);
+                    bottomRom.getChildren().add(btnNew);
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        //Det som skal skje dersom en bruker trykker på knappen for å sende en melding
+        btnChat.setOnAction(e -> {
+            if (txt)
+        });
+        
+        
         
         topLogin.setPrefHeight(100);
         topLogin.setStyle("-fx-border-color: black; -fx-background-color: grey;");
