@@ -20,6 +20,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +29,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -48,11 +51,10 @@ public class Tjener extends Application {
     //static Socket socket;
     //static RunningSocket rs;
     
+    public static ListView listView = new ListView(FXCollections.observableArrayList(Arrays.asList()));
+    public static ArrayList<RomListe> romListe = new ArrayList<>();
     
-    // Listview
-    protected String chat1 = "Chat 1"; 
-    protected String chat2 = "Chat 2"; 
-    protected String chat3 = "Chat 3";
+    TextArea txtarea;
     
     
     private Connection connectDB() {
@@ -97,7 +99,7 @@ public class Tjener extends Application {
                 Statement stmt = conn.createStatement()) {
         stmt.execute(insert);
              
-    } catch(SQLException e) {System.out.println("Funka dårlig å sette inn ny data");}
+        } catch(SQLException e) {System.out.println("Funka dårlig å sette inn ny data");}
     }
     
     
@@ -108,6 +110,7 @@ public class Tjener extends Application {
         
         BorderPane bpane = new BorderPane();
         bpane.setLeft(getRoomPane());
+        bpane.setCenter(getRightPane());
         
         Scene scene = new Scene(bpane, WIDTH, HEIGHT);
         primaryStage.setTitle("Tjener");
@@ -135,15 +138,47 @@ public class Tjener extends Application {
     
     public Pane getRoomPane() {
         Pane rooms = new Pane();
-        rooms.setPadding(new Insets(5, 5, 5, 50));
+        //rooms.setPadding(new Insets(5, 5, 5, 50));
         
-        ObservableList<String> chatNames = FXCollections.observableArrayList(chat1, chat2, chat3);
+        /*ObservableList<String> chatNames = FXCollections.observableArrayList(chat1, chat2, chat3);
         ListView<String> roomList = new ListView<String>(chatNames);
         roomList.setPrefWidth(WIDTH/3);
         roomList.setPrefHeight(HEIGHT);
-        rooms.getChildren().add(roomList);
+        rooms.getChildren().add(roomList);*/
+        
+        listView.setPrefWidth(WIDTH/3);
+        listView.setPrefHeight(HEIGHT);
+        
+        listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                txtarea.clear();
+                for(int i = 0; i < romListe.size(); i++) {
+                    for(int j = 0; j <= romListe.get(i).klienter.size(); i++)
+                        //if(romListe.get(i).romnavn)
+                        txtarea.appendText(romListe.get(i).klienter.get(j) + "\n");
+                }
+            }
+        });
+
+        
+        rooms.getChildren().add(listView);
         
         return rooms; 
+    }
+    
+    
+    public Pane getRightPane() {
+        Pane rightPane = new Pane();
+        rightPane.setStyle("-fx-background-color: black");
+        
+        txtarea = new TextArea();
+        txtarea.setPrefWidth((WIDTH/3)*2);
+        txtarea.setPrefHeight(HEIGHT);
+        txtarea.setEditable(false);
+        rightPane.getChildren().add(txtarea);
+        
+        return rightPane;
     }
     
 

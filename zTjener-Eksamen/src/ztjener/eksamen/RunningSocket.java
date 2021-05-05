@@ -25,7 +25,7 @@ public class RunningSocket implements Runnable {
     DataOutputStream out;
     Tjener tjener;
     Commando type;
-    
+        
     String brukernavn ="";
     
     public RunningSocket(Socket innSocket, Tjener tjener) {
@@ -63,12 +63,23 @@ public class RunningSocket implements Runnable {
                     
                     else if (typeInput.equals("ROM")) {
                         // blablabla lager rom
+                        // Sender melding til alle klienter og ber om å legge til rom i liste
                         String meldingTilAlle = type.CREATE.name() + ";" + beskjed;
                         tjener.broadcast(meldingTilAlle);
+                        
+                        // Legger til rom i liste på tjener-siden
+                        brukernavn = splitString[2];
+                        RomListe rl = new RomListe(brukernavn, beskjed);
+                        tjener.romListe.add(rl);
+                        tjener.listView.getItems().add(beskjed);
                     }
                     
                     else if (typeInput.equals("JOIN")) {
-                        System.out.println(beskjed + " vil joine " + splitString[2]);
+                        System.out.println(splitString[2] + " vil joine " + beskjed);
+                        brukernavn = splitString[2];
+                        RomListe rl = new RomListe(brukernavn, beskjed);
+                        tjener.romListe.add(rl); 
+                        tjener.listView.getItems().add(beskjed);
                     }
                     
                     //tjener.broadcast(linje);

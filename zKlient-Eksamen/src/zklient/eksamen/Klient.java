@@ -176,7 +176,7 @@ public class Klient extends Application {
             public void handle(MouseEvent event) {
                 if (list.getSelectionModel().getSelectedItem().equals(list.getSelectionModel().getSelectedItem())) {
                     try {
-                        String utTekst = type.JOIN.name() + ";" + bNavn + ";" + list.getSelectionModel().getSelectedItem();
+                        String utTekst = type.JOIN.name() + ";" + list.getSelectionModel().getSelectedItem() + ";" + bNavn;
                         out.writeObject(utTekst);
                         out.flush();
                         
@@ -222,10 +222,10 @@ public class Klient extends Application {
         txtChat.setLayoutX(20);
         txtChat.setLayoutY(7);
         
-          topChat.getChildren().add(labelChat);
-          bottomChat.getChildren().add(txtChat);
-          bottomChat.getChildren().add(btnChat);
-          topChat.getChildren().add(btnBack);
+        topChat.getChildren().add(labelChat);
+        bottomChat.getChildren().add(txtChat);
+        bottomChat.getChildren().add(btnChat);
+        topChat.getChildren().add(btnBack);
         /* Slutt på Chat side panes */
         
         Scene scene = new Scene(bpane, 600, 500);
@@ -295,7 +295,7 @@ public class Klient extends Application {
         /* Måte å hente ut verdien på */
         if(result.isPresent()) {
             try {
-                String utTekst = type.ROM.name() + ";" + result.get();
+                String utTekst = type.ROM.name() + ";" + result.get() + ";" + bNavn;
                 out.writeObject(utTekst);
                 out.flush();
                 

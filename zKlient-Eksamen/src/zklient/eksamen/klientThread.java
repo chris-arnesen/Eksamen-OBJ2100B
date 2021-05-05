@@ -8,6 +8,7 @@ package zklient.eksamen;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ListView;
@@ -18,11 +19,9 @@ import javafx.application.Platform;
  * @author jacob
  */
 public class klientThread implements Runnable{
+    
     Socket socket;
     Klient klientVindu;
-    
-    // Test: 
-    
     DataInputStream input;
     
     public klientThread(Socket socket, Klient klientVindu) {
@@ -46,10 +45,9 @@ public class klientThread implements Runnable{
                
                 /* SJEKKER HVA TYPEINFOEN BETYR*/
                 if(typeInput.equals("CREATE")) {
+                    // Varsler klient(er) om å legge til chat-rom
                     System.out.println("Noen lagde et chatrom: " + " " + tjenerMelding);
                     klientVindu.addChatrom(beskjed);
-                    /*klientVindu.addChatrom(beskjed);
-                    klientVindu.list.getItems().add(beskjed);*/
                 }
                 
                 if(typeInput.equals("MELDING"))
