@@ -91,6 +91,14 @@ public class RunningSocket implements Runnable {
                         tjener.listView.getItems().add(beskjed);
                     }
                     
+                    else if (typeInput.equals("REMOVE")) {
+                        brukernavn = splitString[1];
+                        for(int i = 0; i < tjener.romListe.size(); i++)
+                            for(int j = 0; j < tjener.romListe.get(i).klienter.size(); j++)
+                                if(tjener.romListe.get(i).klienter.get(j).equals(brukernavn))
+                                    tjener.romListe.get(i).klienter.remove(j);
+                    }
+                    
                     //tjener.broadcast(linje);
                 }catch (ClassNotFoundException ex) {System.out.println("ERROR på fil connectionThread 36-40");} 
                 

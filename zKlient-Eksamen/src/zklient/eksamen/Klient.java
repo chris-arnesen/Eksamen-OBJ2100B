@@ -39,9 +39,19 @@ import javafx.stage.Stage;
 
 
 public class Klient extends Application {
+
+    private static void forlatRommet() {
+        try {
+            String utTekst = type.REMOVE.name() + ";" + bNavn;
+            out.writeObject(utTekst);
+            out.flush();
+        } catch (IOException ex) {
+            Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     enum Type {
-        BNAVN, MELDING, ROM, JOIN
+        BNAVN, MELDING, ROM, JOIN, REMOVE
     }
     
     static String outputInfo ="";
@@ -317,15 +327,17 @@ public class Klient extends Application {
     }
     
     public static void backBtn() {
-          btnBack.setOnAction(event -> {                          
-                            bpane.getChildren().remove(topChat);
-                            bpane.getChildren().remove(centerChat);
-                            bpane.getChildren().remove(bottomChat);
+        btnBack.setOnAction(event -> {  
+            forlatRommet();
+            
+            bpane.getChildren().remove(topChat);
+            bpane.getChildren().remove(centerChat);
+            bpane.getChildren().remove(bottomChat);
 
-                            bpane.setTop(topRom);
-                            bpane.setCenter(centerRom);
-                            bpane.setBottom(bottomRom);
-                        });
+            bpane.setTop(topRom);
+            bpane.setCenter(centerRom);
+            bpane.setBottom(bottomRom);
+        });
     }
     
     /*
