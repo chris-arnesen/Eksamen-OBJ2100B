@@ -10,5 +10,5 @@ package ztjener.eksamen;
  * @author Mats Engesund
  */
 public enum Commando {
-    CREATE
+    CREATE, EMPTY
 }

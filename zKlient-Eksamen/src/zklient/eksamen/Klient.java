@@ -42,7 +42,7 @@ public class Klient extends Application {
 
     private static void forlatRommet() {
         try {
-            String utTekst = type.REMOVE.name() + ";" + bNavn;
+            String utTekst = type.REMOVE.name() + ";" + bNavn + ";" + labelChat.getText();
             out.writeObject(utTekst);
             out.flush();
         } catch (IOException ex) {

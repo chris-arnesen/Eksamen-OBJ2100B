@@ -88,15 +88,25 @@ public class RunningSocket implements Runnable {
                         brukernavn = splitString[2];
                         RomListe rl = new RomListe(brukernavn, beskjed);
                         tjener.romListe.add(rl); 
-                        tjener.listView.getItems().add(beskjed);
+                        //tjener.listView.getItems().add(beskjed);
                     }
                     
                     else if (typeInput.equals("REMOVE")) {
                         brukernavn = splitString[1];
-                        for(int i = 0; i < tjener.romListe.size(); i++)
-                            for(int j = 0; j < tjener.romListe.get(i).klienter.size(); j++)
+                        String romNmr = splitString[2];
+                        for(int i = 0; i < tjener.romListe.size(); i++) {
+                            for(int j = 0; j < tjener.romListe.get(i).klienter.size(); j++) {
                                 if(tjener.romListe.get(i).klienter.get(j).equals(brukernavn))
                                     tjener.romListe.get(i).klienter.remove(j);
+                                
+                                else if(tjener.romListe.get(i).klienter.isEmpty()) {
+                                    tjener.romListe.remove(i);
+                                    
+                                    tjener.broadcast(type.EMPTY + ";" + romNmr);
+                                }
+                            }
+                            
+                        }
                     }
                     
                     //tjener.broadcast(linje);

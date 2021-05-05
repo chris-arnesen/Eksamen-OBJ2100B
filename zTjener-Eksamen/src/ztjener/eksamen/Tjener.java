@@ -156,9 +156,12 @@ public class Tjener extends Application {
             public void handle(MouseEvent event) {
                 txtarea.clear();
                 for(int i = 0; i < romListe.size(); i++) {
-                    for(int j = 0; j <= romListe.get(i).klienter.size(); i++)
-                        //if(romListe.get(i).romnavn)
-                        txtarea.appendText(romListe.get(i).klienter.get(j) + "\n");
+                    for(int j = 0; j <= romListe.get(i).klienter.size(); i++) {
+                        if(romListe.get(i).klienter.isEmpty())
+                            listView.getItems().remove(listView.getSelectionModel().getSelectedItem());
+                        else 
+                            txtarea.appendText(romListe.get(i).klienter.get(j) + "\n");
+                    }
                 }
             }
         });
