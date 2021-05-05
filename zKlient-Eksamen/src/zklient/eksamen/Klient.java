@@ -30,7 +30,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-
+/**
+ *
+ * @author Mats Engesund
+ */
 public class Klient extends Application {
 
     private static void forlatRommet() {
@@ -79,6 +82,10 @@ public class Klient extends Application {
     static Pane centerRom = new Pane();
     static Pane bottomRom = new Pane();
     static Label labelRom = new Label("Chat-Rom: ");
+
+    /**
+     *
+     */
     public static ListView list = new ListView(FXCollections.observableArrayList(Arrays.asList()));
     static Button btnNew = new Button("Opprett nytt Chat-rom");
     
@@ -92,7 +99,10 @@ public class Klient extends Application {
     static Button btnChat = new Button("Send");
     static Button btnBack = new Button("Forlat rom");
     
-    
+    /**
+     *
+     * @param txt
+     */
     public void addChatrom(String txt) {
         list.getItems().add(txt);
     }
@@ -263,7 +273,9 @@ public class Klient extends Application {
         
     }
     
-    
+    /**
+     *
+     */
     public void openInput() {
         String txt = "";
         TextInputDialog txtBox = new TextInputDialog("Chatroom name");
@@ -291,7 +303,9 @@ public class Klient extends Application {
         }
     }
     
-    
+    /**
+     *
+     */
     public static void backBtn() {
         btnBack.setOnAction(event -> {  
             forlatRommet();
