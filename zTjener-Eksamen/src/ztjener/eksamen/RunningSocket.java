@@ -26,6 +26,8 @@ public class RunningSocket implements Runnable {
     Tjener tjener;
     Commando type;
     
+    String brukernavn ="";
+    
     public RunningSocket(Socket innSocket, Tjener tjener) {
         this.socket = innSocket;
         this.tjener = tjener;
@@ -55,6 +57,20 @@ public class RunningSocket implements Runnable {
                         bnavn = info; 
                     
                     tjener.broadcast(utInfo);
+                    String[] splitString = linje.split(";");
+                    String typeInput = splitString[0];
+                    String beskjed = splitString[1];
+                    //Skiller mellom type input fra brukeren. dvs: er det en melding, brukernavn osv..
+                    if (typeInput.equals("BNAVN")) {
+                        brukernavn = beskjed;
+                        System.out.println("Ny bruker med navn: " + brukernavn);
+                    } else if (typeInput.equals("MELDING")) {
+                        Tjener.lastOppMelding(beskjed, brukernavn); //Laster opp meldingen til databasen
+                        String meldingTilAlle = "[" + brukernavn + "] " + beskjed; 
+                        tjener.broadcast(meldingTilAlle);
+                    }
+                    
+                    tjener.broadcast(linje);
                 }catch (ClassNotFoundException ex) {System.out.println("ERROR på fil connectionThread 36-40");} 
                 
             }
