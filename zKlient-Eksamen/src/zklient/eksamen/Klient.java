@@ -184,7 +184,8 @@ public class Klient extends Application {
         bottomRom.setStyle("-fx-border-color: black; -fx-background-color: grey;");
         labelRom.setStyle("-fx-text-fill:BLACK; -fx-font-size: 30;");
         list.setPrefWidth(600);
-        
+        logUt.setLayoutX(530);
+        logUt.setLayoutY(7);
         
         //Dersom en bruker trykker på et rom i GUI'et
         list.setOnMouseClicked(new EventHandler<MouseEvent>() {
