@@ -45,32 +45,33 @@ public class RunningSocket implements Runnable {
                     String linje = (String)in.readObject();
                     System.out.println(linje);
                     
-                    String utInfo = "";
-                    
-                    // Deler opp linja i type og info (type;info)
-                    String[] arrOfLinje = linje.split(";");
-                    String bnavn = "";
-                    String typeOf = arrOfLinje[0];
-                    String info = arrOfLinje[1];
-                    
-                    if(typeOf.equals("BNAVN"))
-                        bnavn = info; 
-                    
-                    tjener.broadcast(utInfo);
                     String[] splitString = linje.split(";");
                     String typeInput = splitString[0];
                     String beskjed = splitString[1];
+                    
                     //Skiller mellom type input fra brukeren. dvs: er det en melding, brukernavn osv..
                     if (typeInput.equals("BNAVN")) {
                         brukernavn = beskjed;
                         System.out.println("Ny bruker med navn: " + brukernavn);
-                    } else if (typeInput.equals("MELDING")) {
+                    } 
+                    
+                    else if (typeInput.equals("MELDING")) {
                         Tjener.lastOppMelding(beskjed, brukernavn); //Laster opp meldingen til databasen
                         String meldingTilAlle = "[" + brukernavn + "] " + beskjed; 
                         tjener.broadcast(meldingTilAlle);
                     }
                     
-                    tjener.broadcast(linje);
+                    else if (typeInput.equals("ROM")) {
+                        // blablabla lager rom
+                        String meldingTilAlle = type.CREATE.name() + ";" + beskjed;
+                        tjener.broadcast(meldingTilAlle);
+                    }
+                    
+                    else if (typeInput.equals("JOIN")) {
+                        System.out.println(beskjed + " vil joine " + splitString[2]);
+                    }
+                    
+                    //tjener.broadcast(linje);
                 }catch (ClassNotFoundException ex) {System.out.println("ERROR på fil connectionThread 36-40");} 
                 
             }

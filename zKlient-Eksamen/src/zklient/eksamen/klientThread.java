@@ -35,7 +35,18 @@ public class klientThread implements Runnable{
                 input = new DataInputStream(socket.getInputStream());
                 String tjenerMelding = input.readUTF();
                 
-                System.out.println(tjenerMelding); //Vet ikke om break trengs, veldig usikker på den
+                /* STYKKER OPP MELDING FRA TJENER */
+                String[] splitString = tjenerMelding.split(";");
+                String typeInput = splitString[0];
+                String beskjed = splitString[1];
+               
+                /* SJEKKER HVA TYPEINFOEN BETYR*/
+                if(typeInput.equals("CREATE")) {
+                    System.out.println("Noen lagde et chatrom");
+                    klientVindu.addChatrom(beskjed);
+                }
+                
+                //System.out.println(tjenerMelding); //Vet ikke om break trengs, veldig usikker på den
             } catch (IOException ex) {System.out.println("ERROR IO-feil på linje 31-35 i klientThread"); //break;
             } //catch (ClassNotFoundException ex) {System.out.println("ERROR CNF-feil på linje 31-36 i klientThread");}
         }

@@ -83,6 +83,25 @@ public class Klient extends Application {
     static Button btnBack = new Button("Tilbake");
     
     
+    public void addChatrom(String txt) {
+        list.getItems().add(txt);
+        
+        list.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(list.getSelectionModel().getSelectedItem().equals(txt)) {
+                    try {
+                        String utTekst = type.JOIN.name() + ";" + bNavn + ";" + list.getSelectionModel().getSelectedItem();
+                        out.writeObject(utTekst);
+                        out.flush();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
+    }
+    
     @Override
     public void start(Stage primaryStage) {
     
@@ -100,7 +119,8 @@ public class Klient extends Application {
                 if (txtLogin.getText().equals("")) {
                     System.out.println("Feil: Du har ikke skrevet inn et brukernavn");
                 } else {
-                    String utTekst = type.BNAVN.name() + ";" + txtLogin.getText();
+                    bNavn = txtLogin.getText();
+                    String utTekst = type.BNAVN.name() + ";" + bNavn;
                     out.writeObject(utTekst);
                     out.flush();
                     
@@ -160,7 +180,7 @@ public class Klient extends Application {
         labelRom.setLayoutY(7);
         btnNew.setLayoutX(25);
         btnNew.setLayoutY(7);
-        //btnNew.setOnAction(e -> openInput());
+        btnNew.setOnAction(e -> openInput());
         
         /*list.getItems().add("Item 1");
         list.getItems().add("Item 2");
@@ -248,20 +268,32 @@ public class Klient extends Application {
     }*/
     
     
-    /*public void openInput() {
+    public void openInput() {
         String txt = "";
         TextInputDialog txtBox = new TextInputDialog("Chatroom name");
         txtBox.setHeaderText("Create New Chatroom");
         Optional<String> result = txtBox.showAndWait();
-    */  
+     
         /* Måte å hente ut verdien på */
-    /*    if(result.isPresent()) {
-            txt = result.get(); 
-            createNewRoom(txt);
-            addRoomToList(txt);
+        if(result.isPresent()) {
+            try {
+                String utTekst = type.ROM.name() + ";" + result.get();
+                out.writeObject(utTekst);
+                out.flush();
+                
+                bpane.getChildren().remove(topRom);
+                bpane.getChildren().remove(centerRom);
+                bpane.getChildren().remove(bottomRom);
+
+                bpane.setTop(topChat);
+                bpane.setCenter(centerChat);
+                bpane.setBottom(bottomChat);
+            } catch (IOException ex) {
+                Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
-    */
+    
     public static void backBtn() {
           btnBack.setOnAction(event -> {                          
                             bpane.getChildren().remove(topChat);
