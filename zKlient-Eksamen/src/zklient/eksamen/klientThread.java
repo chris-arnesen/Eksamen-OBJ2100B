@@ -17,6 +17,8 @@ public class klientThread implements Runnable{
     Socket socket;
     Klient klientVindu;
     
+    // Test: 
+    
     DataInputStream input;
     
     public klientThread(Socket socket, Klient klientVindu) {
@@ -32,6 +34,7 @@ public class klientThread implements Runnable{
                 //String tjenerMelding = (String)in.readObject();
                 input = new DataInputStream(socket.getInputStream());
                 String tjenerMelding = input.readUTF();
+                
                 System.out.println(tjenerMelding); //Vet ikke om break trengs, veldig usikker på den
             } catch (IOException ex) {System.out.println("ERROR IO-feil på linje 31-35 i klientThread"); //break;
             } //catch (ClassNotFoundException ex) {System.out.println("ERROR CNF-feil på linje 31-36 i klientThread");}

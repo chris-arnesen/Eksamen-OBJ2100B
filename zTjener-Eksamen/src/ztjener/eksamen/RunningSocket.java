@@ -24,6 +24,7 @@ public class RunningSocket implements Runnable {
     ObjectInputStream in;
     DataOutputStream out;
     Tjener tjener;
+    Commando type;
     
     public RunningSocket(Socket innSocket, Tjener tjener) {
         this.socket = innSocket;
@@ -41,7 +42,19 @@ public class RunningSocket implements Runnable {
                 try {
                     String linje = (String)in.readObject();
                     System.out.println(linje);
-                    tjener.broadcast(linje);
+                    
+                    String utInfo = "";
+                    
+                    // Deler opp linja i type og info (type;info)
+                    String[] arrOfLinje = linje.split(";");
+                    String bnavn = "";
+                    String typeOf = arrOfLinje[0];
+                    String info = arrOfLinje[1];
+                    
+                    if(typeOf.equals("BNAVN"))
+                        bnavn = info; 
+                    
+                    tjener.broadcast(utInfo);
                 }catch (ClassNotFoundException ex) {System.out.println("ERROR på fil connectionThread 36-40");} 
                 
             }

@@ -83,7 +83,6 @@ public class Klient extends Application {
     static Button btnBack = new Button("Tilbake");
     
     
-    
     @Override
     public void start(Stage primaryStage) {
     
@@ -92,7 +91,7 @@ public class Klient extends Application {
         bpane.setTop(topLogin);
         bpane.setCenter(centerLogin);
         bpane.setBottom(bottomLogin);
-      btnLogin.setOnAction(new ButtonListener());
+        btnLogin.setOnAction(new ButtonListener());
         
         topLogin.setPrefHeight(100);
         topLogin.setStyle("-fx-border-color: black; -fx-background-color: grey;");
