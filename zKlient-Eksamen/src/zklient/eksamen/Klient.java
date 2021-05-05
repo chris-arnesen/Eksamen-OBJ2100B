@@ -79,10 +79,10 @@ public class Klient extends Application {
     static Pane topChat = new Pane();
     static TextArea centerChat = new TextArea();
     static Pane bottomChat = new Pane();
-    static Label labelChat = new Label("Her kommer rom navnet ;)");
+    static Label labelChat = new Label();
     static TextField txtChat = new TextField();
     static Button btnChat = new Button("Send");
-    static Button btnBack = new Button("Tilbake");
+    static Button btnBack = new Button("Forlat rom");
     
     
     public void addChatrom(String txt) {

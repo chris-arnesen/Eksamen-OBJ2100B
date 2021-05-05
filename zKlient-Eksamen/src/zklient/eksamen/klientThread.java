@@ -50,11 +50,15 @@ public class klientThread implements Runnable{
                     klientVindu.addChatrom(beskjed);
                     /*klientVindu.addChatrom(beskjed);
                     klientVindu.list.getItems().add(beskjed);*/
+                    Platform.runLater(() -> {
+                        klientVindu.labelChat.setText(beskjed);
+                    });
                 }else if(typeInput.equals("MELDING")){
                     System.out.println(beskjed);
                     Platform.runLater(() -> {
                         //display the message in the textarea
                         klientVindu.centerChat.appendText(beskjed + "\n");
+                        
                     });
                 }
                 
