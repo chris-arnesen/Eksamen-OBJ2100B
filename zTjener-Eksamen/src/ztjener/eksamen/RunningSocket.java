@@ -102,7 +102,7 @@ public class RunningSocket implements Runnable {
                                 else if(tjener.romListe.get(i).klienter.isEmpty()) {
                                     tjener.romListe.remove(i);
                                     
-                                    tjener.broadcast(type.EMPTY + ";" + romNmr);
+                                    tjener.broadcast(type.EMPTY.name() + ";" + romNmr);
                                 }
                             }
                             

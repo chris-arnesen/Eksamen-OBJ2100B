@@ -62,7 +62,9 @@ public class klientThread implements Runnable{
                         
                     });
                 }
-                
+                else if(typeInput.equals("EMPTY")) {
+                    System.out.println(tjenerMelding);
+                }
                 
                 //System.out.println(tjenerMelding); //Vet ikke om break trengs, veldig usikker på den
             } catch (IOException ex) {System.out.println("ERROR IO-feil på linje 31-35 i klientThread"); //break;
