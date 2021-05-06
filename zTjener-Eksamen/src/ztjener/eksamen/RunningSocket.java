@@ -3,6 +3,7 @@ package ztjener.eksamen;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 
 
@@ -48,6 +49,9 @@ public class RunningSocket implements Runnable {
                     //Skiller mellom type input fra brukeren. dvs: er det en melding, brukernavn osv..
                     if (typeInput.equals("BNAVN")) {
                         brukernavn = beskjed;
+                        InetAddress inet = socket.getInetAddress();
+                        
+                        tjener.lastOppBrukerTilkoblet(beskjed, inet.getHostAddress());
                         System.out.println("Ny bruker med navn: " + brukernavn);
                         //Dersom brukere har lagt til rom, og denne brukeren er ny, send kommandoer til klienten, om å opprette rom
                         if (tjener.rom.size() > 0 ) {

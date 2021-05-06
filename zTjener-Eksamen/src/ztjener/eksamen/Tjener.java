@@ -9,8 +9,11 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ListView;
@@ -69,11 +72,28 @@ public class Tjener extends Application {
     /**
      *
      */
+     
+    public static void createNewUserTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS bruker (\n"
+                + "     id integer PRIMARY KEY autoincrement, \n"
+                + "     brukernavn string NOT NULL, \n"
+                + "     innlogingsdato blob NOT NULL, \n"
+                + "     IP string NOT NULL \n"
+                + ");";
+        try (Connection conn = DriverManager.getConnection(url);
+                Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch(SQLException e) {
+        System.out.println("Kunne ikke opprette tabell: bruker");
+        }
+    } 
+    
+    
     public static void createNewTable() {
         String sql = "CREATE TABLE IF NOT EXISTS melding (\n"
                 + "     id integer PRIMARY KEY autoincrement, \n"
                 + "     tekst string NOT NULL, \n"
-                + "     klokkeslett date NOT NULL, \n"
+                + "     klokkeslett blob NOT NULL, \n"
                 + "     brukernavn string NOT NULL, \n"
                 + "     romnr integer NOT NULL \n"
                 + ");";
@@ -81,8 +101,8 @@ public class Tjener extends Application {
         try (Connection conn = DriverManager.getConnection(url);
                 Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-        } catch(SQLException e) {
-            System.out.println("Kunne ikke opprette tabell");
+        } catch(SQLException ex) {
+            System.out.println("Kunne ikke opprette tabell: melding");
         }
     }
 
@@ -93,13 +113,32 @@ public class Tjener extends Application {
      */
     public static void lastOppMelding(String melding, String brukernavn) {
        
-        String insert = "insert into melding (id, tekst, klokkeslett, brukernavn, romnr) values (null,'" + melding+"', '12.30','"+brukernavn+"', 1);";
+        java.util.Date dato = Calendar.getInstance().getTime();
+        DateFormat datoFormat = new SimpleDateFormat("hh:mm:ss");
+        String strDate = datoFormat.format(dato);
+        
+        String insert = "insert into melding (id, tekst, klokkeslett, brukernavn, romnr) values (null,'" + melding+"', '"+strDate+"','"+brukernavn+"', 1);";
           
         try (Connection conn = DriverManager.getConnection(url);
                 Statement stmt = conn.createStatement()) {
         stmt.execute(insert);
              
-        } catch(SQLException e) {System.out.println("Funka dårlig å sette inn ny data");}
+        } catch(SQLException e) {System.out.println("Kunne ikke sette inn ny data");}
+    }
+    
+    //id(int), brukernavn(text), innlogingsdato(blob), IP-adresse(text)
+    public static void lastOppBrukerTilkoblet(String bNavn, String ip) {
+        
+        java.util.Date dato = Calendar.getInstance().getTime();
+        DateFormat datoFormat = new SimpleDateFormat("yyyy-mm-dd");
+        String strDate = datoFormat.format(dato);
+        
+        String insert = "insert into bruker (id, brukernavn, innlogingsdato, IP) values (null,'"+bNavn+"','"+strDate+"','"+ip+"')";
+        
+        try (Connection conn = DriverManager.getConnection(url);
+                Statement stmt = conn.createStatement()) {
+            stmt.execute(insert);
+        } catch(SQLException e) {System.out.println("Kunne ikke sette inn data");}
     }
     
     /**
@@ -190,8 +229,10 @@ public class Tjener extends Application {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {  
+    public static void main(String[] args) { 
+        createNewUserTable();
         createNewTable();
+        
         launch(args);
     }
 
