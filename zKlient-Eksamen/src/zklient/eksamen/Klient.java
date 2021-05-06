@@ -50,6 +50,7 @@ public class Klient extends Application {
     static int port = 8000;
     static String host = "localhost";
     static ObjectOutputStream out = null;
+    Thread t;
     
     static String aktivtRom=""; //navnet på rommet som brukeren er i nå
     static List<String> alleMeldinger = new ArrayList<>();
@@ -72,6 +73,7 @@ public class Klient extends Application {
     static Pane topRom = new Pane();
     static Pane centerRom = new Pane();
     static Pane bottomRom = new Pane();
+    static Button logUt = new Button("Logg ut");
     static Label labelRom = new Label("Chat-Rom: ");
 
     /**
@@ -126,7 +128,9 @@ public class Klient extends Application {
                     bpane.setTop(topRom);
                     bpane.setCenter(centerRom);
                     bpane.setBottom(bottomRom);
-                    topRom.getChildren().add(labelRom);
+                    topRom.getChildren().add(labelRom);                    
+                    topRom.getChildren().add(logUt);
+                    
                     centerRom.getChildren().add(list);
                     bottomRom.getChildren().add(btnNew);
                 }
@@ -145,6 +149,10 @@ public class Klient extends Application {
                 txtChat.clear();
             }catch(IOException ex) {System.out.println("Feil med send melding-funksjon");}
         });
+        
+        
+        // Tildeler denne knappen funksjonaliteten å avslutte klient
+        logUt.setOnAction(e -> signOf());
         
         
         topLogin.setPrefHeight(100);
@@ -176,7 +184,8 @@ public class Klient extends Application {
         bottomRom.setStyle("-fx-border-color: black; -fx-background-color: grey;");
         labelRom.setStyle("-fx-text-fill:BLACK; -fx-font-size: 30;");
         list.setPrefWidth(600);
-        
+        logUt.setLayoutX(530);
+        logUt.setLayoutY(7);
         
         //Dersom en bruker trykker på et rom i GUI'et
         list.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -259,7 +268,7 @@ public class Klient extends Application {
             
             out = new ObjectOutputStream(socket.getOutputStream());
             klientThread inputListener = new klientThread(socket, this); 
-            Thread t = new Thread(inputListener);
+            t = new Thread(inputListener);
             t.start();
         }catch(IOException ex){System.out.println("Tilkobling til server feilet");}
         
@@ -294,6 +303,17 @@ public class Klient extends Application {
             }
         }
     }
+    
+    
+    // Metode for å avslutte klienten: 
+    /**
+     *
+     */
+    public void signOf() {
+        t.stop();
+        System.exit(0);
+    }
+    
     
     /**
      *
